@@ -1,0 +1,292 @@
+@import url('reset.css');
+@import url('text.css');
+@import url('960.css');
+
+html, body {
+}
+
+html {
+}
+
+body {
+	background:#222;
+	height:100%;
+}
+
+.logo {
+	font-size:36px;
+	background-image:url(/images/logo.png);
+	background-size:cover;
+	text-indent:-9999px;
+	display:block;
+	width:230px;
+	height:76px;
+	margin: 0 auto 16px;
+}
+
+.masher {
+	height:100%;
+	display:none;
+}
+
+.container {
+	width:960px;
+	margin:0 auto;
+	height:100%;
+	display:table;
+	position:relative;
+}
+
+.inner-container {
+	display:table-cell;
+	vertical-align:center;
+}
+
+.main-container {
+	float:right;
+	height:100%;
+	position:absolute;
+	left:0;
+}
+
+.main {
+	height:100%;
+	display:table;
+}
+
+.main-inner {
+	display:table-cell;
+	vertical-align:middle;
+}
+
+.sidebar-container {
+	width:260px;
+	text-align:center;
+	height:100%;
+	position:absolute;
+	right:0;
+	padding-left:20px;
+	margin-left:-20px;
+}
+
+.sidebar {
+	height:100%;
+	display:table;
+}
+
+.sidebar-inner {
+	vertical-align:middle;
+	display:table-cell;
+}
+
+.sidebar-wrapper {
+	border-radius:10px 10px 10px 10px;
+	background-color:#eee;
+	padding:10px 0;
+	padding-left:10px;
+	margin-left:-10px;
+	box-shadow:inset 0 0 3px #111;
+}
+
+.meme-container {
+	width:680px;
+	padding:10px;
+	border-radius:10px;
+	background-color:#eee;
+	box-shadow:inset 0 0 1px #444;
+}
+
+.auth {
+	display:none;
+}
+
+.votebar {
+	display:inline-block;
+	height:48px;
+}
+
+.vote {
+	display:block;
+	font-size:20px;
+	border-radius:6px;
+	color:#fff;
+	border:none;
+	font-weight:bold;
+	padding:6px 14px;
+	float:left;
+	line-height:24px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 6px;
+	color: #fff;
+	line-height: 1.2;
+	margin-left:6px;
+	padding: 10px 12px 12px 12px;
+	text-align: center;
+	-webkit-background-clip: padding-box; 
+	text-decoration:none;
+}
+
+.vote:hover {
+	cursor:pointer;
+	color:#ddd;
+}
+
+.vote:active {
+/*	margin-top:4px; */
+}
+/*
+
+#lol {
+	background: #4065b6;
+	border-top: 1px solid #38538c;
+	border-right: 1px solid #1f2d4d;
+	border-bottom: 1px solid #151e33;
+	border-left: 1px solid #1f2d4d;
+	-webkit-box-shadow: inset 0 1px 10px 1px #5c8bee, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
+	-moz-box-shadow: inset 0 1px 10px 1px #5c8bee, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
+	box-shadow: inset 0 1px 10px 1px #5c8bee, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
+	text-shadow: 0px -1px 1px #1e2d4d;
+	margin-right:10px;
+}
+
+#meh {
+	background: #b74b58;
+	border-top: 1px solid #896e71;
+	border-right: 1px solid #4c3f41;
+	border-bottom: 1px solid #33282a;
+	border-left: 1px solid #4c3f41;
+	-webkit-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0px 1px 0 #4d3f40, 0 6px 0px #554043, 0 8px 4px 1px #111111;
+	-moz-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0px 1px 0 #4d3f40, 0 6px 0px #554043, 0 8px 4px 1px #111111;
+	box-shadow: inset 0 1px 10px 1px #ecb9c0, 0px 1px 0 #4d3f40, 0 6px 0px #554043, 0 8px 4px 1px #111111;
+	text-shadow: 0px -1px 1px #4c3c3e;
+	margin-right:10px;
+}
+
+#meh:hover {
+	-webkit-box-shadow: inset 0 0px 20px 1px #fde0e3, 0px 1px 0 #4c393b, 0 6px 0px #523e41, 0 8px 4px 1px #111111;
+	-moz-box-shadow: inset 0 0px 20px 1px #fde0e3, 0px 1px 0 #4c393b, 0 6px 0px #523e41, 0 8px 4px 1px #111111;
+	box-shadow: inset 0 0px 20px 1px #fde0e3, 0px 1px 0 #4c393b, 0 6px 0px #523e41, 0 8px 4px 1px #111111;
+}
+
+#meh:active {
+	-webkit-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0 1px 0 #4c393b, 0 2px 0 #513c3f, 0 4px 3px 0 #111111;
+	-moz-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0 1px 0 #4c393b, 0 2px 0 #513c3f, 0 4px 3px 0 #111111;
+	box-shadow: inset 0 1px 10px 1px #ecb9c0, 0 1px 0 #4c393b, 0 2px 0 #513c3f, 0 4px 3px 0 #111111;
+}
+
+
+#lol:hover {
+    -webkit-box-shadow: inset 0 0px 20px 1px #87adff, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
+    -moz-box-shadow: inset 0 0px 20px 1px #87adff, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
+    box-shadow: inset 0 0px 20px 1px #87adff, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
+}
+
+#lol:active {
+	-webkit-box-shadow: inset 0 1px 10px 1px #5c8bee, 0 1px 0 #1d2c4d, 0 2px 0 #1f3053, 0 4px 3px 0 #111111;
+	-moz-box-shadow: inset 0 1px 10px 1px #5c8bee, 0 1px 0 #1d2c4d, 0 2px 0 #1f3053, 0 4px 3px 0 #111111;
+	box-shadow: inset 0 1px 10px 1px #5c8bee, 0 1px 0 #1d2c4d, 0 2px 0 #1f3053, 0 4px 3px 0 #111111;
+}
+*/
+
+#lol {
+	background-color:#246aa5;
+}
+
+#meh {
+	background-color:#a40f0f;
+}
+
+.vote .icon {
+	display:inline-block;
+	width:28px;
+	height:26px;
+	background-image:url(/images/emotions.png);
+	float:left;
+	margin-right:5px;
+}
+
+#meh .icon {
+	background-position:0 28px;
+}
+
+#meh:hover .icon {
+	background-position:0 0;
+}
+
+#lol .icon {
+	background-position: 29px 28px;
+}
+
+#lol:hover .icon {
+	background-position:29px 0;
+}
+
+#rememe {
+	display:inline-block;
+	font-size:18px;
+	font-weight:bold;
+	color:#f38630;
+	text-align:center;
+	margin-top:18px;
+	border-bottom:2px dotted #ccc;
+	line-height:1.25;
+}
+
+#rememe:hover {
+	color:#fa6900;
+	cursor:pointer;
+	border-bottom:2px dotted #f38630;
+}
+
+#skip {
+	color:#888;
+}
+
+#skip:hover {
+	color:#444;
+	cursor:pointer;
+	text-decoration:underline;
+}
+
+.skip-container {
+	display:block;
+	text-align:right;
+	padding:0 20px;
+}
+
+#meme {
+	display:block;
+	margin-bottom:20px;
+	margin:0 auto;
+	max-width:660px;
+	min-height:200px;
+	max-height:80%;
+	margin:0 auto;
+}
+
+#nextmeme {
+	display:none;
+}
+
+.related-container {
+	display:block;
+	padding:10px 20px;
+}
+
+.related-wrapper .related {
+	width:90px;
+	height:90px;
+	background-position:cover;
+	float:left;
+	display:block;
+	margin:10px;
+	background-position:center center;
+	border-radius:4px;
+	box-shadow: inset 0 0 6px #444;
+}
+
+.related-container .related:hover {
+	box-shadow: inset 0 0 12px #ccc;
+	cursor:pointer;
+}
