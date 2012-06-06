@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Meme It</title>
+		<title>Meme It!</title>
 		<link rel="stylesheet" href="css/buddymeme.css"/>
 		<script type="text/javascript" src="http://use.typekit.com/rzf1fbu.js"></script>
 		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
@@ -22,7 +22,7 @@
 
 				var authie = new Buddymeme.views.Auth
 
-/*				window.fbtest = function(){
+				window.fbtest = function(){
 					FB.api('/me/buddy-meme:lol&meme=http://samples.ogp.me/177014649093920','post',  function(response) {
 						if (!response || response.error) {
 						    alert('Error occured');
@@ -30,7 +30,7 @@
 						    alert('Post was successful! Action ID: ' + response.id);
 						  }
 					});
-				} */
+				}
 
 			})
 		  };

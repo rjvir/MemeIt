@@ -86,7 +86,7 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 	 },
 	getRecent: function(){
 		var algorithm = 'Recent Images From News Feed'
-		var query = "SELECT src_big,caption,src FROM photo WHERE pid in (SELECT attachment.media.photo.pid FROM stream WHERE filter_key in (SELECT filter_key FROM stream_filter WHERE uid=me() AND type='newsfeed') AND type=247 LIMIT 100) AND src_big_width > 200 AND src_big_height > 200"
+		var query = "SELECT src_big,caption,src FROM photo WHERE pid in (SELECT attachment.media.photo.pid FROM stream WHERE filter_key in (SELECT filter_key FROM stream_filter WHERE uid=me() AND type='newsfeed') AND type=247 LIMIT 500) AND src_big_width > 200 AND src_big_height > 200"
 		var self = this;
 		
 		console.log('getting ' + algorithm)
@@ -141,10 +141,36 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 				}						
 	  		}
 	  	)	 
-	 }
-	 //SELECT src_small FROM photo WHERE aid in (SELECT attachment.media.photo.aid FROM stream WHERE filter_key in (SELECT filter_key FROM stream_filter WHERE uid=me() AND type='newsfeed') AND type=247 LIMIT 500)
+	 },
+	 returnRandomMeme: function(){
+		var self = this
+		var length = this.length
+		var nextRandom = Math.floor(Math.random()*length)
 
-	
+		//get image and set next image
+		var image = this.at(nextRandom)
+		var imagecaption = image.get('caption')
+		if(imagecaption.indexOf('http://buddymeme.com') != -1){
+			var caption = ''
+		} else {
+			var caption = captions[Math.floor(Math.random()*captions.length)]
+		}
+		
+		var meme = new Buddymeme.models.Meme({image: image, caption: caption})
+		console.log(image.get('algorithm'))
+			//this.setRelated()
+/*			
+			console.log('Loading First Meme...')
+			setTimeout(function(){
+				self.Images.bind("add", function() {
+					self.Images.unbind("add")
+			        self.setNewMeme()
+			    })
+			}, 1) */
+		}
+		return meme
+	 }
+
 })
   
 Buddymeme.views.Masher = Backbone.View.extend({
@@ -160,11 +186,18 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		_.bindAll(this, 'render', 'setNewMeme', 'renderMeme', 'setRelated', 'startSpinner')
 		this.Images = new Buddymeme.models.Images
 		this.Router = new Buddymeme.routes.Router
-		this.Memes = new Buddymeme.models.Memes
+		this.Memes = new Buddymeme.models.Memes({router: this.Router})
 		Backbone.history.start()
+		self = this
 		this.Router.on('route:getMeme', function(image, caption){
-			this.render()
-			alert('test')
+			meme = new Buddymeme.models.Meme({
+				image: image,
+				caption: caption
+			})
+			next = self.Images.returnRandomMeme()
+			self.Memes = new Buddymeme.models.Memes([meme, next])
+			self.render()
+			console.log(caption)
 		})
 		self = this
 		setTimeout(function(){
@@ -178,20 +211,19 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		this.setNewMeme()
 	},
 	render: function(){
-	  	alert('test render')
 	},
 	startSpinner: function(){
 		var opts = {
 		  lines: 16, // The number of lines to draw
 		  length: 12, // The length of each line
-		  width: 3, // The line thickness
+		  width: 5, // The line thickness
 		  radius: 20, // The radius of the inner circle
 		  rotate: 0, // The rotation offset
 		  color: '#000', // #rgb or #rrggbb
-		  speed: 2, // Rounds per second
+		  speed: 3, // Rounds per second
 		  trail: 30, // Afterglow percentage
 		  shadow: false, // Whether to render a shadow
-		  hwaccel: false, // Whether to use hardware acceleration
+		  hwaccel: true, // Whether to use hardware acceleration
 		  className: 'spinner', // The CSS class to assign to the spinner
 		  zIndex: 2e9, // The z-index (defaults to 2000000000)
 		  top: 'auto', // Top position relative to parent in px
@@ -203,39 +235,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	setNewMeme: function(){
 		//get new image from facebook
 		//update model
-		var self = this
-		if(this.Images.length > 3) {
-			var length = this.Images.length
-			if(!this.nextRandom){
-				this.nextRandom = Math.floor(Math.random()*length)
-			}
-			//get image and set next image
-			var image = this.Images.at(this.nextRandom)
-			var imagecaption = image.get('caption')
-			if(imagecaption.indexOf('http://buddymeme.com') != -1){
-				var caption = ''
-			} else {
-				var caption = captions[Math.floor(Math.random()*captions.length)]
-			}
-			Meme(image.get('image'), 'meme', '', caption)
-			this.spinner.stop()
-			
-			this.nextRandom = Math.floor(Math.random()*length)
-			nextImage = new Image()
-			nextImage.src = this.Images.at(this.nextRandom).get('image')
-			
-			console.log(image.get('algorithm'))
-			this.setRelated()
-		} else {
-			
-			console.log('Loading First Meme...')
-			setTimeout(function(){
-				self.Images.bind("add", function() {
-					self.Images.unbind("add")
-			        self.setNewMeme()
-			    })
-			}, 1)
-		}		
+
 	},
 	renderMeme: function(){
 		//get new meme from collection
@@ -248,13 +248,23 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		
 	},
 	lolMeme: function(event){
-		//make facebook open graph call here
-		this.setNewMeme()
+		//make facebook open graph call
+				
+		//reroute
+			//remodel
+				//rerender
+		this.reroute()
+		//this.setNewMeme()
 		return false
 	},
 	skipMeme: function (){
 		this.setNewMeme()
 		return false
+	},
+	reroute: function(){
+		var next = this.Memes.at(1)
+		this.Router.navigate('meme/' + next.get('image') + '/' + next.get('caption'), {trigger: true})
+		
 	},
 	setRelated: function(){
 		length = this.Images.length
