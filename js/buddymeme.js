@@ -168,7 +168,7 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 			    })
 			}, 1) */
 		}
-		return meme
+		return meme;
 	 }
 
 })
