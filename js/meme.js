@@ -1,4 +1,4 @@
-window.Meme = function(image, canvas, top, bottom) {
+window.Meme = function(image, canvas, top, bottom, callback) {
 
 	/*
 	Default top and bottom
@@ -52,6 +52,8 @@ window.Meme = function(image, canvas, top, bottom) {
 	};
 	setCanvasDimensions(image.width, image.height);	
 
+	callback = callback || function(){}
+
 	/*
 	Draw a centered meme string
 	*/
@@ -85,7 +87,7 @@ window.Meme = function(image, canvas, top, bottom) {
 				var i = wordsLength;
 				while (i --) {
 					var justThis = words.slice(0, i).join(' ');
-					if (context.measureText(justThis).width < (canvas.width * 1.0)) {
+					if (context.measureText(justThis).width < (canvas.width * .9)) {
 						drawText(justThis, topOrBottom, y);
 						drawText(words.slice(i, wordsLength).join(' '), topOrBottom, y + fontSize);
 						return;
@@ -95,7 +97,7 @@ window.Meme = function(image, canvas, top, bottom) {
 			else if (topOrBottom === 'bottom') {
 				for (var i = 0; i < wordsLength; i ++) {
 					var justThis = words.slice(i, wordsLength).join(' ');
-					if (context.measureText(justThis).width < (canvas.width * 1.0)) {
+					if (context.measureText(justThis).width < (canvas.width * .9)) {
 						drawText(justThis, topOrBottom, y);
 						drawText(words.slice(0, i).join(' '), topOrBottom, y - fontSize);
 						return;
@@ -134,6 +136,7 @@ window.Meme = function(image, canvas, top, bottom) {
 		// Draw them!
 		drawText(top, 'top');
 		drawText(bottom, 'bottom');
+		callback()
 
 	};
 

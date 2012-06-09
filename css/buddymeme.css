@@ -102,7 +102,6 @@ body {
 
 .votebar {
 	display:inline-block;
-	height:48px;
 }
 
 .vote {
@@ -111,16 +110,14 @@ body {
 	border-radius:6px;
 	color:#fff;
 	border:none;
-	font-weight:bold;
-	padding:6px 14px;
 	float:left;
+	font-weight:bold;
 	line-height:24px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 6px;
 	color: #fff;
 	line-height: 1.2;
-	margin-left:6px;
 	padding: 10px 12px 12px 12px;
 	text-align: center;
 	-webkit-background-clip: padding-box; 
@@ -191,6 +188,7 @@ body {
 
 #lol {
 	background-color:#246aa5;
+	margin-right:6px;
 }
 
 #meh {
@@ -228,7 +226,7 @@ body {
 	font-weight:bold;
 	color:#f38630;
 	text-align:center;
-	margin-top:18px;
+	margin-top:9px;
 	border-bottom:2px dotted #ccc;
 	line-height:1.25;
 }
@@ -239,20 +237,28 @@ body {
 	border-bottom:2px dotted #f38630;
 }
 
-#skip {
-	color:#888;
+.nav-container {
+	display:block;
+	padding:0 20px;
 }
 
-#skip:hover {
+.nav {
+	color:#888;
+	display:block;
+}
+
+.nav:hover {
 	color:#444;
 	cursor:pointer;
 	text-decoration:underline;
 }
 
-.skip-container {
-	display:block;
-	text-align:right;
-	padding:0 20px;
+#back {
+	float:left;
+}
+
+#skip {
+	float:right;
 }
 
 #meme {
