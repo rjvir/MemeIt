@@ -296,3 +296,14 @@ body {
 	box-shadow: inset 0 0 12px #ccc;
 	cursor:pointer;
 }
+
+.mixpanel {
+	position:fixed;
+	bottom:5px;
+	left:5px;
+	opacity:.6;
+}
+
+.mixpanel:hover {
+	opacity:1;
+}

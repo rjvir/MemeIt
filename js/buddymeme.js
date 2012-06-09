@@ -48,6 +48,7 @@ Buddymeme.models.User = Backbone.Model.extend({
 				'distinct_id':response.id,
 				'gender': response.gender
 			})
+			mixpanel.name_tag(response.name)
 		})
 	}
 })
@@ -58,7 +59,7 @@ Buddymeme.models.Image = Backbone.Model.extend({
 
 Buddymeme.models.Images = Backbone.Collection.extend({
 	model: Buddymeme.models.Image,
-	getRecentFromCloseFriends: function(){
+/*	getRecentFromCloseFriends: function(){
 		var algorithm = 'Images From The Past Month From "Close Friends"'
 		var query1 = 'SELECT object_id,text FROM photo_tag WHERE subject in (SELECT actor_id FROM stream WHERE source_id=me() LIMIT 150) AND created >= now()-60*60*24*30'
 		var query2 = 'SELECT object_id,src_big,caption,src FROM photo WHERE object_id in (SELECT object_id FROM #query1) AND src_big_width > 200 AND src_big_height > 200'
@@ -86,13 +87,69 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 							self.add(image)
 						}
 					}
-					mixpanel.track('fetched' + algorithm,{
+					mixpanel.track('fetched ' + algorithm,{
 						time: (+new Date()-start),
 						images: i
 					})
 				}						
 	  		}
 	  	)
+	},*/
+	
+	//SELECT src_big,caption,src FROM photo WHERE object_id in (SELECT object_id FROM photo_tag WHERE subject in (SELECT actor_id FROM stream WHERE source_id=me() LIMIT 150) AND created >= now()-60*60*24*30) AND src_big_width > 200 AND src_big_height > 200
+	getRecentFromCloseFriends: function(){
+		var algorithm = 'Get Recent Tags From Close Friends'
+		var query = 'SELECT src_big,caption,src FROM photo WHERE object_id in (SELECT object_id FROM photo_tag WHERE subject in (SELECT actor_id FROM stream WHERE source_id=me() LIMIT 150) AND created >= now()-60*60*24*30) AND src_big_width > 200 AND src_big_height > 200'
+		var self = this;
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+
+					mixpanel.track('fetched ' + algorithm,{
+						time: (+new Date()-start),
+						images: i
+					})
+				}
+	  		}
+	  	)
+	  	return false	
+	},
+	getProfilePicturesFromCloseFriends: function(){
+		var algorithm = 'Get Profile Pictures From Close Friends'
+		var query = "SELECT src_big,caption,src FROM photo WHERE aid in (SELECT aid FROM album WHERE owner in (SELECT actor_id FROM stream WHERE source_id=me() LIMIT 150) AND name='Profile Pictures') AND src_big_width > 200 AND src_big_height > 200"
+		var self = this;
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+
+					mixpanel.track('fetched ' + algorithm,{
+						time: (+new Date()-start),
+						images: i
+					})
+				}
+	  		}
+	  	)	
+	  	return false	
 	},
 	getLiked: function(){
 		var algorithm = 'Images Liked By The User'
@@ -112,13 +169,14 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 						self.add(image)
 					}
 
-					mixpanel.track('fetched' + algorithm,{
+					mixpanel.track('fetched ' + algorithm,{
 						time: (+new Date()-start),
 						images: i
 					})
 				}
 	  		}
 	  	)	
+	  	return false	
 	 },
 	getRecent: function(){
 		var algorithm = 'Recent Images From News Feed'
@@ -138,13 +196,14 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 						self.add(image)
 					}
 
-					mixpanel.track('fetched' + algorithm,{
+					mixpanel.track('fetched ' + algorithm,{
 						time: (+new Date()-start),
 						images: i
 					})
 				}
 	  		}
 	  	)	
+	  	return false	
 	 },
 	 getRecentFromMessageBuddies: function(){
 		var algorithm = 'Images From The Past Month From People You Recently Messaged'
@@ -174,13 +233,100 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 							self.add(image)
 						}
 					}
-					mixpanel.track('fetched' + algorithm,{
+					mixpanel.track('fetched ' + algorithm,{
 						time: (+new Date()-start),
 						images: i
 					})
 				}						
 	  		}
 	  	)	 
+	  	return false	
+	 },
+	 getPersonalProfilePictures: function(){
+		var algorithm = 'Personal Profile Pictures'
+		var query = "SELECT src_big,caption,src FROM photo WHERE aid in (SELECT aid FROM album WHERE owner=me() AND name='Profile Pictures') AND src_big_width > 200 AND src_big_height > 200"
+		var self = this;
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+
+					mixpanel.track('fetched ' + algorithm,{
+						time: (+new Date()-start),
+						images: i
+					})
+				}
+	  		}
+	  	)	 
+	  	return false	
+	 },
+	 getRecentPersonalPictures: function(){
+		var algorithm = 'Personal Pictures'
+		var query = "SELECT src_big,caption,src FROM photo WHERE object_id in (SELECT object_id FROM photo_tag WHERE subject=me() AND created >= now()-60*60*24*30) AND src_big_width > 200 AND src_big_height > 200"
+		var self = this;
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+
+					mixpanel.track('fetched ' + algorithm,{
+						time: (+new Date()-start),
+						images: i
+					})
+				}
+	  		}
+	  	)	 	
+	  	return false	
+	 },
+	 getRecentFromRandom: function(image){
+		var algorithm = 'Get Recent From Random'
+		var query = "SELECT uid1 FROM friend WHERE uid2 = me() LIMIT 100,200"
+		var count = 10
+		var self = this;
+		
+/*		FB.api(
+			'fql',
+			{q}		
+		) 8?
+/*		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+
+					mixpanel.track('fetched ' + algorithm,{
+						time: (+new Date()-start),
+						images: i
+					})
+				}
+	  		}
+	  	)*/	 	
+	  	return false	
 	 },
 	 returnRandomMeme: function(image){
 		var self = this
@@ -196,8 +342,7 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 			var caption = captions[Math.floor(Math.random()*captions.length)]
 		}
 		
-		var meme = new Buddymeme.models.Meme({image: image.get('image'), caption: caption})
-		console.log(image.get('algorithm'))
+		var meme = new Buddymeme.models.Meme({image: image.get('image'), caption: caption, algorithm: image.get('algorithm')})
 
 		return meme
 	 }
@@ -215,7 +360,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	},
 	initialize: function(){
 		$('.masher').show()
-		_.bindAll(this, 'render', 'setNewMeme', 'renderMeme', 'setRelated', 'startSpinner', 'stopSpinner', 'preload')
+		_.bindAll(this, 'render', 'setNewMeme', 'setRelated', 'startSpinner', 'stopSpinner', 'preload')
 		this.Images = new Buddymeme.models.Images
 		this.Router = new Buddymeme.routes.Router
 		this.Memes = new Buddymeme.models.Memes
@@ -232,8 +377,6 @@ Buddymeme.views.Masher = Backbone.View.extend({
 			next = self.Images.returnRandomMeme()
 			self.Memes = new Buddymeme.models.Memes([meme, next])
 			self.render()
-			console.log(self.Memes)
-			console.log('test log')
 		})
 		
 		this.Images.bind("add", function() {
@@ -250,6 +393,9 @@ Buddymeme.views.Masher = Backbone.View.extend({
 
 		setTimeout(function(){
 			self.Images.getRecentFromCloseFriends()
+			self.Images.getProfilePicturesFromCloseFriends()
+			self.Images.getRecentPersonalPictures()
+			self.Images.getPersonalProfilePictures()
 			self.Images.getLiked()
 			self.Images.getRecent()
 			self.Images.getRecentFromMessageBuddies()
@@ -262,16 +408,14 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		self = this
 		meme = this.Memes.at(0)
 		this.spinner.spin()
-		Meme(
-			Buddymeme.utils.reserialize(meme.get('image')),
-			'meme', 
-			'', 
-			meme.get('caption'), 
-			function(){
-				self.spinner.stop()
-			})
-		console.log(Buddymeme.utils.unserialize(meme.get('image')))
+		Meme(Buddymeme.utils.reserialize(meme.get('image')), 'meme', '', meme.get('caption'), function(){
+			self.spinner.stop()
+		})
 		
+		mixpanel.track('load', {
+			algorithm: meme.get('algorithm'),
+			caption: meme.get('caption')			
+		})
 		this.preload(this.Memes.at(1))
 		this.setRelated()
 	},
@@ -303,10 +447,12 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		//update model
 
 	},
-	renderMeme: function(){
-		//get new meme from collection
-	},
 	mehMeme: function(){		
+		meme = this.Memes.at(0)
+		mixpanel.track('meh', {
+			algorithm: meme.get('algorithm'),
+			caption: meme.get('caption')			
+		})
 		this.reroute()
 		return false
 	},
@@ -328,18 +474,34 @@ Buddymeme.views.Masher = Backbone.View.extend({
 //		mixpanel.track('lol', {
 //			this.Memes.at(0).get
 //		})
+		meme = this.Memes.at(0)
+		mixpanel.track('lol', {
+			algorithm: meme.get('algorithm'),
+			caption: meme.get('caption')			
+		})
+
 		this.reroute()
 		//this.setNewMeme()
 		return false
 	},
 	skipMeme: function (){
+		meme = this.Memes.at(0)
+		mixpanel.track('skip', {
+			algorithm: meme.get('algorithm'),
+			caption: meme.get('caption')			
+		})
+
 		this.reroute()
-		mixpanel.track('skip')
 		return false
 	},
 	back: function(){
 		window.history.back()
-		mixpanel.track('back')
+		meme = this.Memes.at(0)
+		mixpanel.track('back', {
+			algorithm: meme.get('algorithm'),
+			caption: meme.get('caption')			
+		})
+		return false;
 	},
 	reroute: function(){
 		var next = this.Memes.at(1)
@@ -411,6 +573,8 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		index = $(evt.target).attr('data-index')
 		image = this.Images.at(index)
 		meme = this.Images.returnRandomMeme(image)
+		this.spinner.spin()
+		mixpanel.track('clicked related')
 		self.Router.navigate('meme/' + Buddymeme.utils.serialize(meme.get('image')) + '/' + meme.get('caption'), {trigger: true})
 	},
 	preload: function(image){
@@ -435,7 +599,7 @@ Buddymeme.views.Auth = Backbone.View.extend({
 		FB.login(function(response){
 			if (response.authResponse) {
 				$('.auth').hide()
-				mixpanel.track('authed', authResponse)
+				mixpanel.track('authed', response.authResponse)
 				var Masher = new Buddymeme.views.Masher()
 			} else {
 				console.log('User cancelled login or did not fully authorize.');
