@@ -98,6 +98,15 @@ body {
 
 .auth {
 	display:none;
+	text-align:center;
+}
+
+#auth {
+	font-size:36px;
+	font-weight:bold;
+	display:inline-block;
+	margin-top:60px;
+	border-radius:10px;
 }
 
 .votebar {

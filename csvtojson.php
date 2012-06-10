@@ -8,7 +8,7 @@
 header('Content-type: application/json');
 
 // Set your CSV feed
-$feed = 'https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Akse3y5kCOR8dEh6cWRYWDVlWmN0TEdfRkZ3dkkzdGc&single=true&gid=0&output=csv';
+$feed = 'https://docs.google.com/spreadsheet/pub?key=0AtzdTjY96KOUdDl1VENURjF1UkFaLXRWeXZzdEZQcVE&output=csv';
 
 // Arrays we'll use later
 $keys = array();
@@ -36,23 +36,23 @@ $data = csvToArray($feed, ',');
 $count = count($data) - 1;
   
 //Use first row for names  
-$labels = array_shift($data);  
+/*$labels = array_shift($data);  
 
 foreach ($labels as $label) {
   $keys[] = $label;
-}
+}*/
 
 // Add Ids, just in case we want them later
 $keys[] = 'id';
 
-for ($i = 0; $i < $count; $i++) {
+/*for ($i = 0; $i < $count; $i++) {
   $data[$i][] = $i;
-}
+}*/
   
 // Bring it all together
 for ($j = 0; $j < $count; $j++) {
-  $d = array_combine($keys, $data[$j]);
-  $newArray[$j] = $d;
+  //$d = array_combine($keys, $data[$j]);
+  $newArray[$j] = $data[$j];
 }
 
 // Print it out as JSON

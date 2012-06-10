@@ -177,7 +177,34 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 	  		}
 	  	)	
 	  	return false	
-	 },
+	},
+	getLikeFiltered: function(){
+		var algorithm = 'Images Liked By The User With at least 1 tag'
+		var query = 'SELECT src_big, caption, src FROM photo WHERE object_id in(SELECT object_id FROM photo_tag WHERE object_id in (SELECT object_id FROM photo WHERE object_id in (SELECT object_id FROM like WHERE user_id=me() LIMIT 100))) AND src_big_width > 200 AND src_big_width > 200'
+		var self = this;
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+
+					mixpanel.track('fetched ' + algorithm,{
+						time: (+new Date()-start),
+						images: i
+					})
+				}
+	  		}
+	  	)	
+	  	return false	
+	},
 	getRecent: function(){
 		var algorithm = 'Recent Images From News Feed'
 		var query = "SELECT src_big,caption,src FROM photo WHERE pid in (SELECT attachment.media.photo.pid FROM stream WHERE filter_key in (SELECT filter_key FROM stream_filter WHERE uid=me() AND type='newsfeed') AND type=247 LIMIT 500) AND src_big_width > 200 AND src_big_height > 200"
@@ -298,19 +325,37 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 	 },
 	 getRecentFromRandom: function(image){
 		var algorithm = 'Get Recent From Random'
-		var query = "SELECT uid1 FROM friend WHERE uid2 = me() LIMIT 100,200"
-		var count = 10
+		var query = "SELECT uid1 FROM friend WHERE uid2 = me()"
 		var self = this;
 		
-/*		FB.api(
-			'fql',
-			{q}		
-		) 8?
-/*		var start = +new Date()
 		FB.api(
-	  		'fql',
-	  		{q:query},
-	  		function(response){
+			'fql',
+			{q:query},
+			function(response){
+				if(response && response.data){
+					self.getRecentFromFriends(0,response.data.length)
+				}
+			}		
+		)
+		 	
+	  	return false	
+	 },
+	 getRecentFromFriends: function(min, max){
+	 	var algorithm = 'Get Recent From Random'
+	 	if((20+min) <= max) {
+	 		var u = 20+min
+	 		var cont = true
+	 	} else {
+	 		var u = max
+	 		var cont = false
+	 	}
+		var start = +new Date()
+	 	var query = "SELECT src_big, caption, src FROM photo WHERE object_id in (SELECT object_id FROM photo_tag WHERE subject in (SELECT uid1 FROM friend WHERE uid2 = me() LIMIT " + min + "," + u + ") AND created >= now()-60*60*24*30)"
+	 	var self = this
+	 	FB.api(
+	 		'fql',
+	 		{q:query},
+	 		function(response){
 	  			if(response && response.data){
 					data = response.data
 					for(i=0; i<data.length; i++){
@@ -323,10 +368,16 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 						time: (+new Date()-start),
 						images: i
 					})
+					
+					if(cont){
+						self.getRecentFromFriends(u, max)
+					}
+					
 				}
-	  		}
-	  	)*/	 	
-	  	return false	
+	 			
+	 		}
+	 	)
+	 	
 	 },
 	 returnRandomMeme: function(image){
 		var self = this
@@ -360,7 +411,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	},
 	initialize: function(){
 		$('.masher').show()
-		_.bindAll(this, 'render', 'setNewMeme', 'setRelated', 'startSpinner', 'stopSpinner', 'preload')
+		_.bindAll(this, 'render', 'setRelated', 'startSpinner', 'stopSpinner', 'preload', 'navigate')
 		this.Images = new Buddymeme.models.Images
 		this.Router = new Buddymeme.routes.Router
 		this.Memes = new Buddymeme.models.Memes
@@ -372,7 +423,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 			self.Images.unbind("add")
 			meme = new Buddymeme.models.Meme({
 				image: Buddymeme.utils.unserialize(image),
-				caption: caption || ''
+				caption: decodeURIComponent(caption) || ''
 			})
 			next = self.Images.returnRandomMeme()
 			self.Memes = new Buddymeme.models.Memes([meme, next])
@@ -383,34 +434,36 @@ Buddymeme.views.Masher = Backbone.View.extend({
 			if(self.Images.length > 3){
 				self.Images.unbind("add")
 				var next = self.Images.returnRandomMeme()
-				self.Router.navigate('meme/' + Buddymeme.utils.serialize(next.get('image')) + '/' + next.get('caption'), {trigger: true})
+				self.navigate(next)
 			}
 		})
 		
 		this.Memes.bind("add", function(){
 			self.render()
+			self.Images.getRecentPersonalPictures()
+			self.Images.getPersonalProfilePictures()
 		})
 
 		setTimeout(function(){
 			self.Images.getRecentFromCloseFriends()
 			self.Images.getProfilePicturesFromCloseFriends()
-			self.Images.getRecentPersonalPictures()
-			self.Images.getPersonalProfilePictures()
 			self.Images.getLiked()
 			self.Images.getRecent()
 			self.Images.getRecentFromMessageBuddies()
+			self.Images.getRecentFromRandom()
 		}, 1)
 
 		this.startSpinner()
-		this.setNewMeme()
 	},
 	render: function(){
 		self = this
 		meme = this.Memes.at(0)
 		this.spinner.spin()
-		Meme(Buddymeme.utils.reserialize(meme.get('image')), 'meme', '', meme.get('caption'), function(){
-			self.spinner.stop()
-		})
+		if(typeof meme.get('caption') == "string"){
+			Meme(Buddymeme.utils.reserialize(meme.get('image')), 'meme', '', meme.get('caption'), function(){
+				self.spinner.stop()
+			})
+		}
 		
 		mixpanel.track('load', {
 			algorithm: meme.get('algorithm'),
@@ -442,11 +495,6 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	stopSpinner: function(){
 		this.spinner.stop()
 	},
-	setNewMeme: function(){
-		//get new image from facebook
-		//update model
-
-	},
 	mehMeme: function(){		
 		meme = this.Memes.at(0)
 		mixpanel.track('meh', {
@@ -457,23 +505,10 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		return false
 	},
 	reMeme: function(){
-		var current = this.Memes.at(0)
-		if(current.get('caption')) {
-			var caption = captions[Math.floor(Math.random()*captions.length)]
-			this.Router.navigate('meme/' + Buddymeme.utils.serialize(current.get('image')) +'/' + caption, {trigger: true})
-		}
-		
-//		Meme()
+		var next = this.Images.returnRandomMeme(this.Memes.at(0))
+		this.navigate(next)
 	},
 	lolMeme: function(event){
-		//make facebook open graph call
-				
-		//reroute
-			//remodel
-				//rerender
-//		mixpanel.track('lol', {
-//			this.Memes.at(0).get
-//		})
 		meme = this.Memes.at(0)
 		mixpanel.track('lol', {
 			algorithm: meme.get('algorithm'),
@@ -481,7 +516,6 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 
 		this.reroute()
-		//this.setNewMeme()
 		return false
 	},
 	skipMeme: function (){
@@ -505,38 +539,12 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	},
 	reroute: function(){
 		var next = this.Memes.at(1)
-		this.Router.navigate('meme/' + Buddymeme.utils.serialize(next.get('image')) + ((next.get('caption'))?('/' + next.get('caption')):''), {trigger: true})
+		this.navigate(next) //.get('image'), next.get('caption'));
+//		this.Router.navigate('meme/' + Buddymeme.utils.serialize(next.get('image')) + ((next.get('caption'))?('/' + encodeURIComponent(next.get('caption'))):''), {trigger: true})
 	},
-/*	setRelated: function(){
-		length = this.Images.length
-		var rands = []
-		var count = 0
-		while(rands.length < 4){
-		  var randomnumber=Math.floor(Math.random()*length)
-		  var found=false
-		  for(var i=0;i<rands.length;i++){
-		    if(rands[i]==randomnumber){
-		    	found=true
-		    	break
-		    }
-		  }
-		  if(!found) {
-		  	rands[rands.length]=randomnumber
-		  }
-
-		  count++
-
-		  if (count >= 100) {
-		  	break
-		  }
-		}
-		
-		$('.related-wrapper').empty()
-		for(i = 0; i<rands.length; i++){
-			image = this.Images.at(i).get('thumb')
-			$('.related-wrapper').append('<div class="related" style="background-image:url('+image+')"></div>')
-		}
-	} */
+	navigate: function(image){
+		this.Router.navigate('meme/' + Buddymeme.utils.serialize(image.get('image')) + ((image.get('caption'))?('/' + encodeURIComponent(image.get('caption'))):''), {trigger: true})
+	},
 	setRelated: function(){
 		length = this.Images.length
 		var rands = []
@@ -568,14 +576,12 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		}
 	},
 	showRelated: function(evt){
-//		this.Router.navigate('meme/)
-
 		index = $(evt.target).attr('data-index')
 		image = this.Images.at(index)
 		meme = this.Images.returnRandomMeme(image)
 		this.spinner.spin()
 		mixpanel.track('clicked related')
-		self.Router.navigate('meme/' + Buddymeme.utils.serialize(meme.get('image')) + '/' + meme.get('caption'), {trigger: true})
+		this.navigate(meme)
 	},
 	preload: function(image){
 		img = new Image()

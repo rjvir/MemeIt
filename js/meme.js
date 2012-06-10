@@ -65,6 +65,9 @@ window.Meme = function(image, canvas, top, bottom, callback) {
 		// Variable setup
 		topOrBottom = topOrBottom || 'top';
 		var fontSize = (canvas.height / 8);
+		if (fontSize>60){
+			fontSize = 60
+		}
 		var x = canvas.width / 2;
 		if (typeof y === 'undefined') {
 			y = fontSize;
@@ -130,6 +133,9 @@ window.Meme = function(image, canvas, top, bottom, callback) {
 		context.strokeStyle = 'black';
 		context.lineWidth = 2;
 		var fontSize = (canvas.height / 8);
+		if(fontSize > 60){
+			fontSize = 60
+		}
 		context.font = '800 ' + fontSize + 'px futura-pt-1';
 		context.textAlign = 'center';
 
