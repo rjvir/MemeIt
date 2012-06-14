@@ -110,15 +110,18 @@ body {
 }
 
 .votebar {
-	display:inline-block;
+	display:block;
+	padding:0 20px;
+	position:relative;
+	height:48px;
+	margin:0 30px;
 }
 
 .vote {
 	display:block;
+	position:absolute;
 	font-size:20px;
 	border-radius:6px;
-	color:#fff;
-	border:none;
 	float:left;
 	font-weight:bold;
 	line-height:24px;
@@ -127,106 +130,78 @@ body {
 	border-radius: 6px;
 	color: #fff;
 	line-height: 1.2;
-	padding: 10px 12px 12px 12px;
+	padding: 7px 10px 7px 9px;
 	text-align: center;
-	-webkit-background-clip: padding-box; 
-	text-decoration:none;
+    background: #222 url(/images/overlay.png) repeat-x;
+    color: #fff;
+    text-decoration: none;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+	cursor:pointer;
 }
 
 .vote:hover {
 	cursor:pointer;
-	color:#ddd;
 }
 
 .vote:active {
-/*	margin-top:4px; */
+	top:2px;
+	-moz-box-shadow: 0 0 4px 2px rgba(0,0,0,.3) inset;
+    -webkit-box-shadow: 0 0 4px 2px rgba(0,0,0,.3) inset;
+    box-shadow: 0 0 4px 2px rgba(0,0,0,.3) inset;
+	cursor:pointer;
 }
-/*
 
 #lol {
-	background: #4065b6;
-	border-top: 1px solid #38538c;
-	border-right: 1px solid #1f2d4d;
-	border-bottom: 1px solid #151e33;
-	border-left: 1px solid #1f2d4d;
-	-webkit-box-shadow: inset 0 1px 10px 1px #5c8bee, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
-	-moz-box-shadow: inset 0 1px 10px 1px #5c8bee, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
-	box-shadow: inset 0 1px 10px 1px #5c8bee, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
-	text-shadow: 0px -1px 1px #1e2d4d;
-	margin-right:10px;
+	background-color: #216dc0;
+	left:0;
+}
+
+#lol:hover {
+	background-color:#247AD6;
 }
 
 #meh {
-	background: #b74b58;
-	border-top: 1px solid #896e71;
-	border-right: 1px solid #4c3f41;
-	border-bottom: 1px solid #33282a;
-	border-left: 1px solid #4c3f41;
-	-webkit-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0px 1px 0 #4d3f40, 0 6px 0px #554043, 0 8px 4px 1px #111111;
-	-moz-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0px 1px 0 #4d3f40, 0 6px 0px #554043, 0 8px 4px 1px #111111;
-	box-shadow: inset 0 1px 10px 1px #ecb9c0, 0px 1px 0 #4d3f40, 0 6px 0px #554043, 0 8px 4px 1px #111111;
-	text-shadow: 0px -1px 1px #4c3c3e;
-	margin-right:10px;
+	background-color: #bd1e1e;
+	right:0;
 }
 
 #meh:hover {
-	-webkit-box-shadow: inset 0 0px 20px 1px #fde0e3, 0px 1px 0 #4c393b, 0 6px 0px #523e41, 0 8px 4px 1px #111111;
-	-moz-box-shadow: inset 0 0px 20px 1px #fde0e3, 0px 1px 0 #4c393b, 0 6px 0px #523e41, 0 8px 4px 1px #111111;
-	box-shadow: inset 0 0px 20px 1px #fde0e3, 0px 1px 0 #4c393b, 0 6px 0px #523e41, 0 8px 4px 1px #111111;
-}
-
-#meh:active {
-	-webkit-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0 1px 0 #4c393b, 0 2px 0 #513c3f, 0 4px 3px 0 #111111;
-	-moz-box-shadow: inset 0 1px 10px 1px #ecb9c0, 0 1px 0 #4c393b, 0 2px 0 #513c3f, 0 4px 3px 0 #111111;
-	box-shadow: inset 0 1px 10px 1px #ecb9c0, 0 1px 0 #4c393b, 0 2px 0 #513c3f, 0 4px 3px 0 #111111;
-}
-
-
-#lol:hover {
-    -webkit-box-shadow: inset 0 0px 20px 1px #87adff, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
-    -moz-box-shadow: inset 0 0px 20px 1px #87adff, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
-    box-shadow: inset 0 0px 20px 1px #87adff, 0px 1px 0 #1d2c4d, 0 6px 0px #1f3053, 0 8px 4px 1px #111111;
-}
-
-#lol:active {
-	-webkit-box-shadow: inset 0 1px 10px 1px #5c8bee, 0 1px 0 #1d2c4d, 0 2px 0 #1f3053, 0 4px 3px 0 #111111;
-	-moz-box-shadow: inset 0 1px 10px 1px #5c8bee, 0 1px 0 #1d2c4d, 0 2px 0 #1f3053, 0 4px 3px 0 #111111;
-	box-shadow: inset 0 1px 10px 1px #5c8bee, 0 1px 0 #1d2c4d, 0 2px 0 #1f3053, 0 4px 3px 0 #111111;
-}
-*/
-
-#lol {
-	background-color:#246aa5;
-	margin-right:6px;
-}
-
-#meh {
-	background-color:#a40f0f;
+	background-color: #DF3030;
 }
 
 .vote .icon {
 	display:inline-block;
-	width:28px;
+	width:24px;
 	height:26px;
-	background-image:url(/images/emotions.png);
+	background-image:url(/images/emojis.png);
 	float:left;
-	margin-right:5px;
+	margin-right:7px;
+	opacity:.8;
+}
+
+.vote:hover .icon {
+	opacity:1;
 }
 
 #meh .icon {
-	background-position:0 28px;
-}
-
-#meh:hover .icon {
 	background-position:0 0;
 }
 
+#meh:hover .icon {
+	background-position:24px 0;
+}
+
 #lol .icon {
-	background-position: 29px 28px;
+	background-position: 0 26px;
 }
 
 #lol:hover .icon {
-	background-position:29px 0;
+	background-position:24px 26px;
 }
 
 #rememe {
@@ -315,4 +290,20 @@ body {
 
 .mixpanel:hover {
 	opacity:1;
+}
+
+.footer {
+	position:fixed;
+	bottom:10px;
+	right:20px;
+}
+
+#logout {
+	color:#aaa;
+}
+
+#logout:hover {
+	cursor:pointer;
+	color:#eee;
+	text-decoration:underline;
 }
