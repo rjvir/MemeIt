@@ -349,7 +349,12 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		'click #skip': 'skipMeme',
 		'click #rememe': 'reMeme',
 		"click .related": 'showRelated',
-		"click #back": 'back'
+		"click #back": 'back',
+		"click #logout": 'logout',
+		"click #fbshare": 'fbshare',
+		"click #fbsend": 'fbsend',
+		"click #tweet": 'tweet',
+		"click #copy": 'copylink'
 	},
 	initialize: function(){
 		$('.masher').show()
@@ -557,6 +562,46 @@ Buddymeme.views.Masher = Backbone.View.extend({
 				break;
 			default:
 		}
+	},
+	logout: function(evt){
+		self = this
+		FB.logout(function(response){
+			window.location.reload()
+		})
+	},
+	fbshare: function(evt){
+		var image = this.Memes.at(0).get('image')
+		var imageId = Buddymeme.utils.serialize(image)
+		var caption = this.Memes.at(0).get('caption')
+		var encodedCaption = encodeURIComponent(caption)
+		FB.ui({
+			method:'feed', 
+			link:'http://memeit.com/' + imageId + '/' + encodedCaption,
+/*			picture: 'https://images2-focus-opensocial.googleusercontent.com/gadgets/proxy?url=' + image + '&container=focus&gadget=a&no_expand=1&resize_h=0&rewriteMime=image/*', */
+/*			picture: 'http://memeit.com/proxy.php?url=' + image, */
+			name: caption,
+			caption:'Meme It!'
+		}, function(resposne){
+			console.log(response)
+		})
+		console.log('http://memeit.com/proxy.php?url=' + image)
+	},
+	fbsend: function(evt){
+		var image = this.Memes.at(0).get('image')
+		var imageId = Buddymeme.utils.serialize(image)
+		var caption = this.Memes.at(0).get('caption')
+		var encodedCaption = encodeURIComponent(caption)
+		FB.ui({
+			method:'send', 
+			link:'http://memeit.com/' + imageId + '/' + encodedCaption,
+/*			picture: 'https://images2-focus-opensocial.googleusercontent.com/gadgets/proxy?url=' + image + '&container=focus&gadget=a&no_expand=1&resize_h=0&rewriteMime=image/*', */
+/*			picture: 'http://memeit.com/proxy.php?url=' + image, */
+			name: caption,
+			caption:'Meme It!'
+		}, function(resposne){
+			console.log(response)
+		})
+		console.log('http://memeit.com/proxy.php?url=' + image)
 	}
 
 })
@@ -572,6 +617,7 @@ Buddymeme.views.Auth = Backbone.View.extend({
 		mixpanel.track('loaded splash')
 	},
 	fbAuth: function(event){
+//		window.location = 'https://www.facebook.com/dialog/oauth?api_key=132429983552387&app_id=132429983552387&client_id=132429983552387&display=page&domain=memeit.com&locale=en_US&redirect_uri=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter.php%3Fversion%3D8%23cb%3Df5749b7ac%26origin%3Dhttp%253A%252F%252Fmemeit.com%252Ff1e4d2a084%26domain%3Dmemeit.com%26relation%3Dopener%26frame%3Df376ea420&response_type=token%2Csigned_request&scope=read_stream%2Cuser_photos%2Cfriends_photos%2Cuser_likes%2Cread_mailbox';
 		var self = this
 		FB.login(function(response){
 			if (response.authResponse) {
@@ -579,6 +625,7 @@ Buddymeme.views.Auth = Backbone.View.extend({
 				mixpanel.track('authed', response.authResponse)
 				var Masher = new Buddymeme.views.Masher()
 			} else {
+				alert('you must authorize in order to use BuddyMeme');
 				console.log('User cancelled login or did not fully authorize.');
 			}
 		}, {scope: 'read_stream,user_photos,friends_photos,user_likes,read_mailbox'})

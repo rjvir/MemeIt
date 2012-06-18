@@ -94,6 +94,7 @@ body {
 	border-radius:10px;
 	background-color:#eee;
 	box-shadow:inset 0 0 1px #444;
+	position:relative;
 }
 
 .auth {
@@ -139,6 +140,7 @@ body {
     -webkit-border-radius: 6px;
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    box-shadow: 0 1px 3px rgba(0,0,0,.6);
     text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
     border-bottom: 1px solid rgba(0,0,0,0.25);
 	cursor:pointer;
@@ -306,4 +308,150 @@ body {
 	cursor:pointer;
 	color:#eee;
 	text-decoration:underline;
+}
+
+.sharing-overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	background-color:rgba(0,0,0,.95);
+	width:100%;
+	height:100%;
+	border-radius:10px;
+	-webkit-transition: opacity .2s ease-in-out;
+	-moz-transition: opacity .2s ease-in-out;
+	-o-transition: opacity .2s ease-in-out;
+	-ms-transition: opacity .2s ease-in-out; 
+	transition: opacity .2s ease-in-out;
+	opacity:0;
+	filter:Alpha(opacity=0);
+	text-align:center;
+}
+
+.meme-container:hover .sharing-overlay {
+	opacity:1;
+	filter:Alpha(opacity=100);
+}
+
+.sharing-inner {
+	display:inline-block;
+	position:absolute;
+	top:45%;
+}
+
+/*
+
+.share {
+	display:block;
+	padding:4px 10px;
+	background-color:rgba(255,255,255,.95);
+	background-color:#fcfcfc;
+	color:#444;
+	font-weight:bold;
+	font-size:20px;
+	margin-top:8px;
+	border-radius:6px;
+	float:left;
+	margin:0 10px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    box-shadow: 0 1px 3px rgba(0,0,0,.6);
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    background: #fff url(/images/overlay.png) repeat-x;
+    padding-left:36px;
+    position:relative;
+	-webkit-transition: top .2s ease-in-out;
+	-moz-transition: top .2s ease-in-out;
+	-o-transition: top .2s ease-in-out;
+	-ms-transition: top .2s ease-in-out; 
+	transition: top .2s ease-in-out; */
+	top:20px;
+}
+
+.meme-container:hover .share {
+	top:0;
+}
+
+.share:hover {
+	background-color:blue;
+	color:#fff;
+	cursor:pointer;
+}
+
+.share .icon {
+	width:22px;
+	height:22px;
+	position:absolute;
+	left:8px;
+	display:inline-block;
+	margin-top:5px;
+	background-image:url(/images/shareicons.png);
+}
+
+.fbshare .icon, .fbsend .icon {
+	background-position:0 0;
+}
+
+.tweet .icon {
+	background-position:-22px 0;
+}
+
+.copy .icon {
+	background-position:-44px 0;
+}
+
+.share:hover .icon {
+	background-position-y: -22px;
+}
+
+.uibutton { 
+    position: relative; 
+    z-index: 1;
+    overflow: visible; 
+    display: inline-block; 
+    padding: 0.3em 0.6em 0.375em; 
+    border: 1px solid #999; 
+    border-bottom-color: #888;
+    margin: 0;
+    text-decoration: none; 
+    text-align: center;
+    font: bold 11px/normal 'lucida grande', tahoma, verdana, arial, sans-serif; 
+    white-space: nowrap; 
+    cursor: pointer; 
+    /* outline: none; */
+    color: #333; 
+    background-color: #eee;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f6f6), to(#e4e4e3));
+    background-image: -moz-linear-gradient(#f5f6f6, #e4e4e3);
+    background-image: -o-linear-gradient(#f5f6f6, #e4e4e3);
+    background-image: linear-gradient(#f5f6f6, #e4e4e3);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f5f6f6', EndColorStr='#e4e4e3'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    /* IE hacks */
+    zoom: 1; 
+    *display: inline; 
+}
+
+.uibutton:hover,
+.uibutton:focus,
+.uibutton:active {
+    border-color: #777 #777 #666;
+}
+
+.uibutton:active {
+    border-color: #aaa;
+    background: #ddd;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+/* overrides extra padding on button elements in Firefox */
+.uibutton::-moz-focus-inner {
+    padding: 0;
+    border: 0;
 }

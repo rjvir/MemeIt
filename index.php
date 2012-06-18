@@ -66,7 +66,7 @@
 										<div style="clear:both"></div>
 									</div>
 									<div style="clear:both;"></div>
-									<a id="rememe">Re-Caption This Picture</a>
+									<a id="rememe">Shuffle Caption</a>
 									<div id="related-container" class="related-container">
 										<div class="related-wrapper">
 											<div class="related"></div>
@@ -95,6 +95,14 @@
 								<div class="meme-container" id="meme-container">
 									<canvas id="meme">
 									</canvas>
+									<div class="sharing-overlay">
+										<div class="sharing-inner">
+											<a class="fbshare share" id="fbshare"><div class="icon"></div>Share</a>
+											<a class="fbsend share" id="fbsend"><div class="icon"></div>Send</a>
+											<a class="tweet share" id="tweet"><div class="icon"></div>Tweet</a>
+											<a class="copy share" id="copy"><div class="icon"></div>Copy Link</a>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
