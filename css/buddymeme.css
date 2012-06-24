@@ -98,16 +98,108 @@ body {
 }
 
 .auth {
+	display:table;
 	display:none;
 	text-align:center;
+	background-image:url(/images/auth-bg.png);
+	width:100%;
+	height:100%;
+	background-position:center center;
+	background-repeat:no-repeat;
 }
 
 #auth {
-	font-size:36px;
 	font-weight:bold;
-	display:inline-block;
-	margin-top:60px;
+    left:auto;
+    right:auto;
+    z-index: 1;
+    overflow: visible; 
+    display: table-cell;
+    vertical-align:middle;
+    padding: 0.3em 0.6em 0.375em; 
+    border: 1px solid #999; 
+    border-bottom-color: #888;
+    text-decoration: none; 
+    text-align: center;
+    font: bold 36px/normal 'lucida grande', tahoma, verdana, arial, sans-serif; 
+    white-space: nowrap; 
+    cursor: pointer; 
+    /* outline: none; */
+    color: #333; 
+    background-color: #eee;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f6f6), to(#e4e4e3));
+    background-image: -moz-linear-gradient(#f5f6f6, #e4e4e3);
+    background-image: -o-linear-gradient(#f5f6f6, #e4e4e3);
+    background-image: linear-gradient(#f5f6f6, #e4e4e3);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f5f6f6', EndColorStr='#e4e4e3'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
+    /* IE hacks */
+    zoom: 1; 
+    *display: inline;
+    border-color: #29447e #29447e #1a356e;
+    color: #fff;
+    background-color: #5B74A8;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#637bad), to(#5872a7));
+    background-image: -moz-linear-gradient(#637bad, #5872a7);
+    background-image: -o-linear-gradient(#637bad, #5872a7);
+    background-image: linear-gradient(#637bad, #5872a7);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#637bad', EndColorStr='#5872a7'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+    border-radius:6px;
+}
+
+#auth:hover {
+    border-color: #777 #777 #666;
+}
+
+#auth:active {
+    border-color: #aaa;
+    background: #ddd;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border-color: #29447E;
+    background: #4F6AA3;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+#auth::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+.auth-wrapper {
+	display:table-cell;
+	vertical-align:middle;
+}
+
+.auth-box {
+	background-color:rgba(0,0,0,.7);
+	width:430px;
+	margin:0 auto;
+	display:block;
+	padding:20px;
 	border-radius:10px;
+	border:1px solid rgba(0,0,0,.2);
+    -moz-box-shadow: 0 3px 3px rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0 3px 3px rgba(0,0,0,0.6);
+    box-shadow: 0 0 3px rgba(0,0,0,.6);
+}
+
+.pitch {
+	width:300px;
+	margin:0 auto;
+	color:#fff;
+	font-size:18px;
+	padding:10px;
 }
 
 .votebar {
@@ -326,6 +418,7 @@ body {
 	opacity:0;
 	filter:Alpha(opacity=0);
 	text-align:center;
+	display:none;
 }
 
 .meme-container:hover .sharing-overlay {
@@ -339,10 +432,8 @@ body {
 	top:45%;
 }
 
-/*
-
-.share {
-	display:block;
+.animation-wrapper {
+/*	display:block;
 	padding:4px 10px;
 	background-color:rgba(255,255,255,.95);
 	background-color:#fcfcfc;
@@ -360,24 +451,32 @@ body {
     border-bottom: 1px solid rgba(0,0,0,0.25);
     background: #fff url(/images/overlay.png) repeat-x;
     padding-left:36px;
-    position:relative;
+    position:relative;*/
 	-webkit-transition: top .2s ease-in-out;
 	-moz-transition: top .2s ease-in-out;
 	-o-transition: top .2s ease-in-out;
 	-ms-transition: top .2s ease-in-out; 
-	transition: top .2s ease-in-out; */
+	transition: top .2s ease-in-out; 
 	top:20px;
+	position:relative;
 }
 
-.meme-container:hover .share {
+.copy {
+	position:relative;
+	display:block;
+}
+
+.meme-container:hover .animation-wrapper {
 	top:0;
 }
 
+/*
 .share:hover {
 	background-color:blue;
 	color:#fff;
 	cursor:pointer;
 }
+
 
 .share .icon {
 	width:22px;
@@ -404,7 +503,7 @@ body {
 .share:hover .icon {
 	background-position-y: -22px;
 }
-
+*/
 .uibutton { 
     position: relative; 
     z-index: 1;
@@ -416,7 +515,7 @@ body {
     margin: 0;
     text-decoration: none; 
     text-align: center;
-    font: bold 11px/normal 'lucida grande', tahoma, verdana, arial, sans-serif; 
+    font: bold 18px/normal 'lucida grande', tahoma, verdana, arial, sans-serif; 
     white-space: nowrap; 
     cursor: pointer; 
     /* outline: none; */
@@ -432,7 +531,20 @@ body {
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #fff;
     /* IE hacks */
     zoom: 1; 
-    *display: inline; 
+    *display: inline;
+    border-color: #29447e #29447e #1a356e;
+    color: #fff;
+    background-color: #5B74A8;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#637bad), to(#5872a7));
+    background-image: -moz-linear-gradient(#637bad, #5872a7);
+    background-image: -o-linear-gradient(#637bad, #5872a7);
+    background-image: linear-gradient(#637bad, #5872a7);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#637bad', EndColorStr='#5872a7'); /* for IE 6 - 9 */
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 #8a9cc2;    
+    margin:0 10px;
+    border-radius:4px;
 }
 
 .uibutton:hover,
@@ -448,10 +560,51 @@ body {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    border-color: #29447E;
+    background: #4F6AA3;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 /* overrides extra padding on button elements in Firefox */
 .uibutton::-moz-focus-inner {
     padding: 0;
     border: 0;
+}
+
+#link {
+	display:block;
+	width:100%;
+	margin-top:15px;
+	font-size:11px;
+	padding:3px;
+	padding-left:16px;
+	background-image:url(/images/anchor.png);
+	background-repeat:no-repeat;
+	background-size:12px 12px;
+	border:1px solid #444;
+	background-position:2px center;
+	border-radius:3px;
+	margin-left:-8px;
+}
+
+.fb-like {
+	display:block;
+	margin-top:20px;
+}
+
+.habla_window_div_base {
+	right:50px !important;
+}
+
+.fb-like-container {
+	display:block;
+	text-align:center;
+}
+
+.fb-like {
+	display:inline-block;
+	margin-left:48px;
 }

@@ -246,6 +246,50 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 	  	)	 	
 	  	return false	
 	 },
+	 getPersonalPictures: function(){
+		var algorithm = 'All Personal Pictures'
+		var query = "SELECT src_big,caption,src FROM photo WHERE object_id in (SELECT object_id FROM photo_tag WHERE subject=me() AND src_big_width > 300 AND src_big_height > 300"
+		var self = this;
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+				}
+	  		}
+	  	)	 	
+	  	return false	
+	 },
+	 getUploads: function(){
+		var algorithm = 'Personal Uploads'
+		var query = "SELECT src_big,caption,src FROM photo WHERE aid in (SELECT aid,name FROM album WHERE owner=me())"
+		var self = this;
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					}
+				}
+	  		}
+	  	)	 	
+	  	return false	
+	 },
 	 getRecentFromRandom: function(image){
 		var algorithm = 'Get Recent From Random'
 		var query = "SELECT uid1 FROM friend WHERE uid2 = me()"
@@ -352,9 +396,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		"click #back": 'back',
 		"click #logout": 'logout',
 		"click #fbshare": 'fbshare',
-		"click #fbsend": 'fbsend',
-		"click #tweet": 'tweet',
-		"click #copy": 'copylink'
+		"click #fbsend": 'fbsend'
 	},
 	initialize: function(){
 		$('.masher').show()
@@ -385,7 +427,9 @@ Buddymeme.views.Masher = Backbone.View.extend({
 				self.Images.unbind("add")
 				setTimeout(function(){
 					self.Images.getRecentPersonalPictures()
-					self.Images.getPersonalProfilePictures()				
+					self.Images.getPersonalProfilePictures()
+//					self.Images.getUploads()
+//					self.Images.getPersonalPictures()
 				}, 1)
 				if(Backbone.history.start()){
 //					var meme = new Buddymeme.models.meme({image: )
@@ -394,6 +438,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 					var next = self.Images.returnRandomMeme()
 					self.navigate(next)				
 				}
+				$('.sharing-overlay').show()
 			}
 		})
 		
@@ -423,7 +468,15 @@ Buddymeme.views.Masher = Backbone.View.extend({
 			})
 		}
 		
-		$('#fb_share').attr('share_url', 'http://memeit.com/'+meme.get('image')+'/'+meme.get('caption'))
+		//set copyable link url
+		$('#link').val('http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption')))
+		
+		//create facebook like button
+		//<div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>
+		
+		$('.fb-like-container').html('<div class="fb-like" data-href="http://memeit.com/' + Buddymeme.utils.serialize(meme.get('image')) + '/' + encodeURIComponent(meme.get('caption')) + '" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>')
+		FB.XFBML.parse();
+		//$('.fb-like-container').innerHTML = attr('data-href', 'http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption')))
 		mixpanel.track('load', {
 			'algorithm': meme.get('algorithm'),
 			'caption': meme.get('caption')			
@@ -469,7 +522,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	},
 	lolMeme: function(event){
 		meme = this.Memes.at(0)
-		window.mp = mixpanel.track('lol', {
+		mixpanel.track('lol', {
 			'algorithm': meme.get('algorithm'),
 			'caption': meme.get('caption')			
 		})
@@ -539,7 +592,10 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		image = this.Images.at(index)
 		meme = this.Images.returnRandomMeme(image)
 		this.spinner.spin()
-		mixpanel.track('clicked related')
+		mixpanel.track('clicked related', {
+			'algorithm': meme.get('algorithm'),
+			'caption': meme.get('caption')			
+		})
 		this.navigate(meme)
 	},
 	preload: function(image){
@@ -552,13 +608,13 @@ Buddymeme.views.Masher = Backbone.View.extend({
 				this.back()
 				break;
 			case 38:
-				this.lolMeme()
+//				this.lolMeme()
 				break;
 			case 39:
 				this.skipMeme()
 				break;
 			case 40:
-				this.mehMeme()
+//				this.mehMeme()
 				break;
 			default:
 		}
@@ -570,9 +626,10 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 	},
 	fbshare: function(evt){
-		var image = this.Memes.at(0).get('image')
+		var meme = this.Memes.at(0)
+		var image = meme.get('image')
 		var imageId = Buddymeme.utils.serialize(image)
-		var caption = this.Memes.at(0).get('caption')
+		var caption = meme.get('caption')
 		var encodedCaption = encodeURIComponent(caption)
 		FB.ui({
 			method:'feed', 
@@ -584,16 +641,22 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		}, function(resposne){
 			console.log(response)
 		})
-		console.log('http://memeit.com/proxy.php?url=' + image)
+		mixpanel.track('fbshare', {
+			'algorithm': meme.get('algorithm'),
+			'caption': meme.get('caption')			
+		})
 	},
 	fbsend: function(evt){
-		var image = this.Memes.at(0).get('image')
+		var meme = this.Memes.at(0)
+		var image = meme.get('image')
 		var imageId = Buddymeme.utils.serialize(image)
-		var caption = this.Memes.at(0).get('caption')
+		var caption = meme.get('caption')
 		var encodedCaption = encodeURIComponent(caption)
+		var url = 'https://www.facebook.com/connect/uiserver.php?app_id=132429983552387&method=permissions.request&redirect_uri=' + encodeURIComponent('http://memeit.com/' + imageId + '/' + encodedCaption) + '&response_type=token&display=page&auth_referral=1'
+		var url = 'http://memeit.com/' + imageId + '/' + encodedCaption
 		FB.ui({
 			method:'send', 
-			link:'http://memeit.com/' + imageId + '/' + encodedCaption,
+			link: url,//'http://memeit.com/' + imageId + '/' + encodedCaption,
 /*			picture: 'https://images2-focus-opensocial.googleusercontent.com/gadgets/proxy?url=' + image + '&container=focus&gadget=a&no_expand=1&resize_h=0&rewriteMime=image/*', */
 /*			picture: 'http://memeit.com/proxy.php?url=' + image, */
 			name: caption,
@@ -601,7 +664,10 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		}, function(resposne){
 			console.log(response)
 		})
-		console.log('http://memeit.com/proxy.php?url=' + image)
+		mixpanel.track('fbsend', {
+			'algorithm': meme.get('algorithm'),
+			'caption': meme.get('caption')			
+		})
 	}
 
 })
