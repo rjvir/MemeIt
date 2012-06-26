@@ -82,6 +82,7 @@ body {
 
 .sidebar-wrapper {
 	border-radius:10px 10px 10px 10px;
+	border-radius:8px;
 	background-color:#eee;
 	padding:10px 0;
 	padding-left:10px;
@@ -92,7 +93,7 @@ body {
 .meme-container {
 	width:680px;
 	padding:10px;
-	border-radius:10px;
+	border-radius:8px;
 	background-color:#eee;
 	box-shadow:inset 0 0 1px #444;
 	position:relative;
@@ -421,26 +422,36 @@ body {
 	position:fixed;
 	bottom:5px;
 	left:5px;
-	opacity:.6;
+	opacity:.1;
 }
 
 .mixpanel:hover {
 	opacity:1;
 }
 
-.footer {
+.tray {
 	position:fixed;
 	bottom:10px;
 	right:20px;
 }
 
-#logout {
-	color:#aaa;
+.footer {
+	text-align:right;
+	padding-right:10px;
+	padding-top:10px;
+	font-size:11px;
 }
 
-#logout:hover {
+.footer a {
+	color:#888;
+	text-decoration:none;
+	margin-left:10px;
+}
+
+
+.footer a:hover {
 	cursor:pointer;
-	color:#eee;
+	color:#444;
 	text-decoration:underline;
 }
 
@@ -451,7 +462,7 @@ body {
 	background-color:rgba(0,0,0,.95);
 	width:100%;
 	height:100%;
-	border-radius:10px;
+	border-radius:8px;
 	-webkit-transition: opacity .2s ease-in-out;
 	-moz-transition: opacity .2s ease-in-out;
 	-o-transition: opacity .2s ease-in-out;
@@ -469,9 +480,8 @@ body {
 }
 
 .sharing-inner {
-	display:inline-block;
-	position:absolute;
-	top:45%;
+	display:table-cell;
+	vertical-align:middle;
 }
 
 .animation-wrapper {
@@ -566,16 +576,16 @@ body {
 .fb-like {
 	display:block;
 	margin-top:20px;
+	margin-left:48px;
 }
 
 .habla_window_div_base {
-	right:50px !important;
+/*	right:50px !important; */
 }
 
 .fb-like-container {
 	display:block;
 	text-align:center;
-	margin-left:48px;
 }
 
 .fb-like {

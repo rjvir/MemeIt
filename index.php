@@ -1,11 +1,14 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Meme It!</title>
+		<title>Meme It! - Meme Your Friends with Facebook!</title>
 		<link rel="stylesheet" href="css/buddymeme.css"/>
 		<script type="text/javascript" src="http://use.typekit.com/rzf1fbu.js"></script>
 		<link rel="icon" href="http://memeit.s3.amazonaws.com/favicon.png" type="image/x-icon">
 		<link rel="shortcut icon" href="http://memeit.s3.amazonaws.com/favicon.png" type="image/x-icon">
+		<meta name="description" content="Meme your friends with their Facebook pictures" />
+		<meta name="keywords" content="memeit, meme it, meme, meme your friends, friend memes, buddy meme, buddymeme, friendmemes, snapchop, i'd cap that, facebook" />
+
 		<!-- start TypeKit --><script type="text/javascript">try{Typekit.load();}catch(e){}</script><!-- end TypeKit -->
 		
 		<!-- start Mixpanel --><script type="text/javascript">(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
@@ -59,7 +62,7 @@
 				<div class="auth-wrapper">
 					<div class="auth-box">
 						<img src="/images/splash-logo.png" class="splash-logo" />
-						<div class="pitch">View hilarious memes of your friends. We need you to login with Facebook so we can fetch photos of your friends. We never post anything without your permission.</div>
+						<div class="pitch">View hilarious memes of your friends through their Facebook pictures.</div>
 						<button id="auth">Login with Facebook</button>
 					</div>
 				</div>
@@ -93,6 +96,11 @@
 										</div>
 										<div style="clear:both;"></div>
 									</div>
+								</div>
+								<div class="footer">
+									<a href="/TOS.html" target="_blank">Terms</a>
+									<a href="mailto:info@memeit.com" target="_blank">Contact</a>
+									<a id="logout">Logout</a>
 									<div style="clear:both"></div>
 								</div>
 							</div>
@@ -105,6 +113,7 @@
 									<canvas id="meme">
 									</canvas>
 									<div class="sharing-overlay">
+										<div style="display:table;height:100%;margin:0 auto;">
 										<div class="sharing-inner">
 											<div class="animation-wrapper">
 												<a class="uibutton large confirm fbshare" id="fbshare"><div class="icon"></div>Share</a>
@@ -115,6 +124,7 @@
 												</div>
 											</div>
 										</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -123,7 +133,9 @@
 					<div style="clear:both"></div>
 				</div>
 			</div>
-			<div class="footer"><a id="logout">Logout</a></div>
+			<div class="tray">
+			<!--<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="dark" data-show-faces="false" data-stream="false" data-header="false"></div>-->
+			</div>
 		</div>
 		<a class="mixpanel" href="https://mixpanel.com/f/partner" target="_blank"><img src="https://mixpanel.com/site_media/images/partner/badge_blue.png" alt="Mobile and Web Analytics" /></a>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
