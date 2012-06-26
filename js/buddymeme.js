@@ -390,13 +390,13 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	events: {
 		'click #lol': 'lolMeme',
 		'click #meh': 'mehMeme',
-		'click #skip': 'skipMeme',
+		'click #next': 'skipMeme',
 		'click #rememe': 'reMeme',
 		"click .related": 'showRelated',
-		"click #back": 'back',
+		"click #prev": 'back',
 		"click #logout": 'logout',
-		"click #fbshare": 'fbshare',
-		"click #fbsend": 'fbsend'
+		"click .fbshare": 'fbshare',
+		"click .fbsend": 'fbsend'
 	},
 	initialize: function(){
 		$('.masher').show()
@@ -414,11 +414,21 @@ Buddymeme.views.Masher = Backbone.View.extend({
 				image: Buddymeme.utils.unserialize(image),
 				caption: decodeURIComponent(caption) || ''
 			})
+			
 			if(self.Memes.at(1)){
 				meme.set('algorithm', self.Memes.at(1).get('algorithm'))
 			}
+			
 			next = self.Images.returnRandomMeme()
 			self.Memes = new Buddymeme.models.Memes([meme, next])
+			url = 'http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption'))
+			FB.api('/me/meme-it:view&meme='+url,'post',  function(response) {
+				if (!response || response.error) {
+				    console.log('Error occured');
+				  } else {
+				    console.log('Post was successful! Action ID: ' + response.id);
+				  }
+			});
 			self.render()
 		})
 			
@@ -631,16 +641,23 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		var imageId = Buddymeme.utils.serialize(image)
 		var caption = meme.get('caption')
 		var encodedCaption = encodeURIComponent(caption)
-		FB.ui({
+/*		FB.ui({
 			method:'feed', 
 			link:'http://memeit.com/' + imageId + '/' + encodedCaption,
-/*			picture: 'https://images2-focus-opensocial.googleusercontent.com/gadgets/proxy?url=' + image + '&container=focus&gadget=a&no_expand=1&resize_h=0&rewriteMime=image/*', */
-/*			picture: 'http://memeit.com/proxy.php?url=' + image, */
 			name: caption,
 			caption:'Meme It!'
 		}, function(resposne){
 			console.log(response)
-		})
+		}) */
+//		popup = window.open('http://facebook.com/sharer.php?u=http://memeit.com/' + imageId + '/' + encodedCaption, 'share','height=320,width=640')
+		
+		var left = (screen.width/2)-(640/2);
+		var top = (screen.height/2)-(340/2)-100;
+		var popup = window.open ('http://facebook.com/sharer.php?u=http://memeit.com/' + imageId + '/' + encodedCaption, 'share', 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+640+', height='+340+', top='+top+', left='+left);
+
+		if (popup.focus) {newwindow.focus()}
+		return false;
+	
 		mixpanel.track('fbshare', {
 			'algorithm': meme.get('algorithm'),
 			'caption': meme.get('caption')			

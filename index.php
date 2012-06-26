@@ -41,16 +41,6 @@
 
 				var authie = new Buddymeme.views.Auth
 
-				window.fbtest = function(){
-					FB.api('/me/buddy-meme:lol&meme=http://samples.ogp.me/177014649093920','post',  function(response) {
-						if (!response || response.error) {
-						    alert('Error occured');
-						  } else {
-						    alert('Post was successful! Action ID: ' + response.id);
-						  }
-					});
-				}
-
 			})
 		  };
 		
@@ -69,7 +59,7 @@
 				<div class="auth-wrapper">
 					<div class="auth-box">
 						<img src="/images/splash-logo.png" class="splash-logo" />
-						<div class="pitch">We'll need you to Login with Facebook so we can grab images that you have permission to see. We don't post anything, we promise!</div>
+						<div class="pitch">View hilarious memes of your friends. We need you to login with Facebook so we can fetch photos of your friends. We never post anything without your permission.</div>
 						<button id="auth">Login with Facebook</button>
 					</div>
 				</div>
@@ -83,10 +73,14 @@
 							<div class="sidebar-inner">
 								<div class="sidebar-wrapper">
 									<div class="logo">BuddyMeme</div>
-									<div class="votebar">
-										<a href="#" id="lol" class="vote"><div class="icon"></div>LOL</a>
-										<a href="#" id="meh" class="vote" ><div class="icon"></div>meh</a>
-										<div style="clear:both"></div>
+									<div class="browse-container">
+										<a id="prev" class="browse uibutton">&laquo;</a>
+										<a id="next" class="browse uibutton">Next Meme &raquo;</a>
+										<div style="clear:both;"></div>
+									</div>
+									<div class="sharing-container">
+										<a class="uibutton confirm fbshare" target="_blank">Share</a>										
+										<a class="uibutton confirm fbsend">Send to Friend</a>										
 									</div>
 									<div style="clear:both;"></div>
 									<a id="rememe">Shuffle Caption</a>
@@ -100,14 +94,6 @@
 										<div style="clear:both;"></div>
 									</div>
 									<div style="clear:both"></div>
-									<a name="fb_share" share_url="http://memeit.com"></a>
-											<!--<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>-->		
-
-									<div class="nav-container">
-										<a id="back" class="nav">&laquo; Previous meme</a>
-										<a id="skip" class="nav">Skip this meme &raquo;</a>
-										<div style="clear:both;"></div>
-									</div>
 								</div>
 							</div>
 						</div>	
@@ -121,12 +107,9 @@
 									<div class="sharing-overlay">
 										<div class="sharing-inner">
 											<div class="animation-wrapper">
-												<a class="uibutton fbshare share" id="fbshare"><div class="icon"></div>Share</a>
-												<a class="uibutton fbsend share" id="fbsend"><div class="icon"></div>Send</a>
-												<div style="clear:both;"></div>
-												<div class="fb-like-container" id="fb-like-container">
-													<div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>
-												</div>
+												<a class="uibutton large confirm fbshare" id="fbshare"><div class="icon"></div>Share</a>
+												<a class="uibutton large confirm fbsend" id="fbsend"><div class="icon"></div>Send to Friend</a>
+												<div class="fb-like-container"><div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div></div>
 												<div class="copy">
 													<input name="link" id="link" onclick="select()" readonly="readonly"/>
 												</div>
