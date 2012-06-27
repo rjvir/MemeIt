@@ -28,6 +28,8 @@ body {
 .masher {
 	height:100%;
 	display:none;
+	position:relative;
+	z-index:2;
 }
 
 .container {
@@ -430,16 +432,18 @@ body {
 }
 
 .tray {
-	position:fixed;
-	bottom:10px;
-	right:20px;
+	position:absolute;
+	bottom:-5px;
+	right:0px;
 }
 
 .footer {
 	text-align:right;
-	padding-right:10px;
-	padding-top:10px;
 	font-size:11px;
+	position:absolute;
+	right:230px;
+	width:300px;
+	bottom:10px;
 }
 
 .footer a {
@@ -580,7 +584,7 @@ body {
 }
 
 .habla_window_div_base {
-/*	right:50px !important; */
+	right:210px !important;
 }
 
 .fb-like-container {

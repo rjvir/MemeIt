@@ -6,6 +6,7 @@
 		<script type="text/javascript" src="http://use.typekit.com/rzf1fbu.js"></script>
 		<link rel="icon" href="http://memeit.s3.amazonaws.com/favicon.png" type="image/x-icon">
 		<link rel="shortcut icon" href="http://memeit.s3.amazonaws.com/favicon.png" type="image/x-icon">
+		<link rel="image_src" type="image/png" href="http://www.memeit.com/images/logo.png" />
 		<meta name="description" content="Meme your friends with their Facebook pictures" />
 		<meta name="keywords" content="memeit, meme it, meme, meme your friends, friend memes, buddy meme, buddymeme, friendmemes, snapchop, i'd cap that, facebook" />
 
@@ -97,12 +98,6 @@
 										<div style="clear:both;"></div>
 									</div>
 								</div>
-								<div class="footer">
-									<a href="/TOS.html" target="_blank">Terms</a>
-									<a href="mailto:info@memeit.com" target="_blank">Contact</a>
-									<a id="logout">Logout</a>
-									<div style="clear:both"></div>
-								</div>
 							</div>
 						</div>	
 					</div>
@@ -133,9 +128,15 @@
 					<div style="clear:both"></div>
 				</div>
 			</div>
-			<div class="tray">
-			<!--<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="dark" data-show-faces="false" data-stream="false" data-header="false"></div>-->
-			</div>
+		</div>
+		<div class="tray">
+								<div class="footer">
+									<a href="/TOS.html" target="_blank">Terms</a>
+									<a href="mailto:info@memeit.com" target="_blank">Contact</a>
+									<a id="logout">Logout</a>
+									<div style="clear:both"></div>
+								</div>
+		<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="dark" data-show-faces="false" data-stream="false" data-header="false"></div>
 		</div>
 		<a class="mixpanel" href="https://mixpanel.com/f/partner" target="_blank"><img src="https://mixpanel.com/site_media/images/partner/badge_blue.png" alt="Mobile and Web Analytics" /></a>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -146,7 +147,7 @@
 		<script type="text/javascript" src="js/captions.js"></script>
 		<script type="text/javascript" src="js/buddymeme.js"></script>
 		
-		<!-- begin olark code --><script data-cfasync="false" type='text/javascript'>/*{literal}<![CDATA[*/
+		<!-- begin olark code --<script data-cfasync="false" type='text/javascript'>/*{literal}<![CDATA[*/
 window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,' onl' + 'oad="var d=',g,";d.getElementsByTagName('head')[0].",j,"(d.",h,"('script')).",k,"='",l,"//",a.l,"'",'"',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain='"+d.domain+"';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+'d.write("'+p().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});
 /* custom configuration goes here (www.olark.com/documentation) */
 olark.identify('1679-587-10-7412');/*]]>{/literal}*/</script><noscript><a href="https://www.olark.com/site/1679-587-10-7412/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript><!-- end olark code -->

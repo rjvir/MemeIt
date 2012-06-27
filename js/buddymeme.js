@@ -15,12 +15,24 @@ Buddymeme.utils.unserialize = function(oid){
 	return 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/' + oid + '_b.jpg'
 }
 
+Buddymeme.utils.unserializeThumb = function(oid){
+	return 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/' + oid + '_s.jpg'
+}
+
 Buddymeme.utils.reserialize = function(fbUrl){
 	return Buddymeme.utils.unserialize(Buddymeme.utils.serialize(fbUrl))
 }
 
 Buddymeme.utils.meme = function(){
 
+}
+
+Buddymeme.utils.getImageUrlFromOg = function(url){
+	return Buddymeme.utils.unserialize(url.split('http://memeit.com/')[1].split('/')[0]);
+}
+
+Buddymeme.utils.getThumbUrlFromOg = function(url){
+	return Buddymeme.utils.unserializeThumb(url.split('http://memeit.com/')[1].split('/')[0]);
 }
 
 Buddymeme.routes.Router = Backbone.Router.extend({
@@ -369,6 +381,51 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 	 	)
 	 	
 	 },
+	 getOgFromFriends: function(){
+		var algorithm = 'Get OG Views From Friends'
+		var query = "SELECT uid FROM user WHERE is_app_user = '1' AND uid IN (SELECT uid2 FROM friend WHERE uid1 = me())"
+		var self = this
+		
+		var start = +new Date()
+		FB.api(
+	  		'fql',
+	  		{q:query},
+	  		function(response){
+	  			if(response && response.data){
+					data = response.data
+					for(i=0; i<data.length;i++){
+						self.getOgFromFriend(data[i].uid)
+					}
+/*					for(i=0; i<data.length; i++){
+						var image = new Buddymeme.models.Image()
+						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
+						self.add(image)
+					} */
+//					console.log(data)
+				}
+	  		}
+	  	)	 	
+	  	return false	
+		
+	 },
+	 getOgFromFriend: function(uid){
+		var algorithm = 'Get OG Views From Friends'
+	 	var url = 'http://graph.facebook.com/'+uid+'/meme-it:view'
+	 	var self = this
+	 	FB.api(uid+'/meme-it:view', function(response){
+	 		if(response.data.length > 0){
+				for(i=0;i<response.data.length;i++){
+		 			//console.log(response.data[i].data.meme)
+		 			var caption = response.data[i].data.meme.title;
+		 			var img = Buddymeme.utils.getImageUrlFromOg(response.data[i].data.meme.url)
+		 			var thumb = Buddymeme.utils.getThumbUrlFromOg(response.data[i].data.meme.url)
+					var image = new Buddymeme.models.Image()
+					image.set({'viewCaption':caption, 'image':img, 'algorithm':algorithm, 'thumb':thumb})
+					self.add(image)
+				}
+		 	}
+	 	})
+	 },
 	 returnRandomMeme: function(image){
 		var self = this
 		var length = this.length
@@ -377,7 +434,11 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 		//get image and set next image
 		var image = image || this.at(next)
 		var imagecaption = image.get('caption')
-		var caption = captions[Math.floor(Math.random()*captions.length)]
+		if(image.get('viewCaption')){
+			var caption = image.get('viewCaption')
+		} else {
+			var caption = captions[Math.floor(Math.random()*captions.length)]
+		}
 		
 		var meme = new Buddymeme.models.Meme({image: image.get('image'), caption: caption, algorithm: image.get('algorithm')})
 
@@ -422,13 +483,20 @@ Buddymeme.views.Masher = Backbone.View.extend({
 			next = self.Images.returnRandomMeme()
 			self.Memes = new Buddymeme.models.Memes([meme, next])
 			url = 'http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption'))
-			FB.api('/me/meme-it:view&meme='+url,'post',  function(response) {
-				if (!response || response.error) {
-				    console.log('Error occured');
-				  } else {
-				    console.log('Post was successful! Action ID: ' + response.id);
-				  }
-			});
+			
+			if((typeof ogPost === 'undefined')){
+			} else {
+				clearTimeout(ogPost)			
+			}
+			ogPost = setTimeout(function(){
+				FB.api('/me/meme-it:view&meme='+url,'post',  function(response) {
+					mixpanel.track('og view', {
+						'algorithm': meme.get('algorithm'),
+						'caption': meme.get('caption')			
+					})
+
+				});
+			},2000);
 			self.render()
 		})
 			
@@ -438,8 +506,11 @@ Buddymeme.views.Masher = Backbone.View.extend({
 				setTimeout(function(){
 					self.Images.getRecentPersonalPictures()
 					self.Images.getPersonalProfilePictures()
-//					self.Images.getUploads()
-//					self.Images.getPersonalPictures()
+					self.Images.getRecentFromCloseFriends()
+					self.Images.getProfilePicturesFromCloseFriends()
+					self.Images.getLiked()
+					self.Images.getUploads()
+					self.Images.getPersonalPictures()
 				}, 1)
 				if(Backbone.history.start()){
 //					var meme = new Buddymeme.models.meme({image: )
@@ -457,13 +528,11 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 
 		setTimeout(function(){
-			self.Images.getRecentFromCloseFriends()
-			self.Images.getProfilePicturesFromCloseFriends()
-			self.Images.getLiked()
 			self.Images.getLikeFiltered()
 			self.Images.getRecent()
 			self.Images.getRecentFromMessageBuddies()
 			self.Images.getRecentFromRandom()
+			self.Images.getOgFromFriends()
 		}, 1)
 
 		this.startSpinner()
@@ -493,6 +562,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 		this.preload(this.Memes.at(1))
 		this.setRelated()
+		
 	},
 	startSpinner: function(){
 		var opts = {
@@ -708,10 +778,10 @@ Buddymeme.views.Auth = Backbone.View.extend({
 				mixpanel.track('authed', response.authResponse)
 				var Masher = new Buddymeme.views.Masher()
 			} else {
-				alert('you must authorize in order to use BuddyMeme');
+				alert('you must authorize in order to use Meme It');
 				console.log('User cancelled login or did not fully authorize.');
 			}
-		}, {scope: 'read_stream,user_photos,friends_photos,user_likes,read_mailbox'})
+		}, {scope: 'publish_actions,read_stream,user_photos,friends_photos,user_likes,read_mailbox'})
 		mixpanel.track('clicked auth')
 	},
 	renderAuth: function(){
