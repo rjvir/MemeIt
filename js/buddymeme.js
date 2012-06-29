@@ -183,7 +183,7 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 	 },
 	 getRecentFromMessageBuddies: function(){
 		var algorithm = 'Images From The Past Month From People You Recently Messaged'
-		var query1 = 'SELECT object_id,text FROM photo_tag WHERE subject in (SELECT recipients FROM thread WHERE folder_id = 0) AND created >= now()-60*60*24*30'
+		var query1 = 'SELECT object_id,text FROM photo_tag WHERE subject in (SELECT recipients FROM thread WHERE folder_id = 0) AND created >= now()-60*60*24*120'
 		var query2 = 'SELECT object_id,src_big,caption,src FROM photo WHERE object_id in (SELECT object_id FROM #query1) AND src_big_width > 300 AND src_big_height > 300'
 		var multiquery = {"query1":query1, "query2":query2}
 		var self = this;
@@ -426,22 +426,33 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 		 	}
 	 	})
 	 },
+	 
+	 //this function generates a random Meme object - optionally, you can pass in an image object and it will generate a meme object from that image
 	 returnRandomMeme: function(image){
+	 	//setting the self variable for when 'this' goes away. don't worry about this.
 		var self = this
+		
+		//gets the total number of images stored right now, and selects a random number in that range
 		var length = this.length
 		var next = Math.floor(Math.random()*length)
 
-		//get image and set next image
+		//if an image was passed in, that's the image that's going to be meme'd. If not, then it will be the random image we just generated
 		var image = image || this.at(next)
+
+		//this is the caption associated with the image, if any
 		var imagecaption = image.get('caption')
+		
+		//if there is a 'viewCaption' ,that will be the caption of the image. This means that if there was a caption from the 'view' action, we don't generate a random caption and instead use the exact caption used from a friend's view action, so it will say "friend 1 and friend 2 viewed the same meme'
 		if(image.get('viewCaption')){
 			var caption = image.get('viewCaption')
 		} else {
+		
+		//otherwise, just get a random caption from the captions variable in captions.js
 			var caption = captions[Math.floor(Math.random()*captions.length)]
 		}
 		
+		//create a meme object to be returned by the function, and return it
 		var meme = new Buddymeme.models.Meme({image: image.get('image'), caption: caption, algorithm: image.get('algorithm')})
-
 		return meme
 	 }
 })
@@ -528,6 +539,13 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 
 		setTimeout(function(){
+ 			var caption = 'rawr';
+ 			var img = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/551595_457986870896509_823218446_b.jpg'
+ 			var thumb = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/551595_457986870896509_823218446_s.jpg'
+			var image = new Buddymeme.models.Image()
+			image.set({'viewCaption':caption, 'image':img, 'algorithm':'nba meme', 'thumb':thumb})
+			self.Images.add(image)
+			console.log(image)
 			self.Images.getLikeFiltered()
 			self.Images.getRecent()
 			self.Images.getRecentFromMessageBuddies()

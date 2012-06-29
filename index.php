@@ -6,7 +6,8 @@
 		<script type="text/javascript" src="http://use.typekit.com/rzf1fbu.js"></script>
 		<link rel="icon" href="http://memeit.s3.amazonaws.com/favicon.png" type="image/x-icon">
 		<link rel="shortcut icon" href="http://memeit.s3.amazonaws.com/favicon.png" type="image/x-icon">
-		<link rel="image_src" type="image/png" href="http://www.memeit.com/images/logo.png" />
+		<link rel="image_src" type="image/png" href="http://images.sodahead.com/polls/002641083/3649326924_lol_guy_answer_1_xlarge.jpeg" />
+		<meta property="og:image" content="http://images.sodahead.com/polls/002641083/3649326924_lol_guy_answer_1_xlarge.jpeg" />
 		<meta name="description" content="Meme your friends with their Facebook pictures" />
 		<meta name="keywords" content="memeit, meme it, meme, meme your friends, friend memes, buddy meme, buddymeme, friendmemes, snapchop, i'd cap that, facebook" />
 
@@ -63,8 +64,11 @@
 				<div class="auth-wrapper">
 					<div class="auth-box">
 						<img src="/images/splash-logo.png" class="splash-logo" />
+						<div style="display:none">Meme your friends!</div>
 						<div class="pitch">View hilarious memes of your friends through their Facebook pictures.</div>
 						<button id="auth">Login with Facebook</button>
+						<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="dark" data-show-faces="false" data-stream="false" data-header="false" style="margin-top:10px"></div>
+
 					</div>
 				</div>
 			</div>
@@ -97,6 +101,7 @@
 										</div>
 										<div style="clear:both;"></div>
 									</div>
+									<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="light" data-show-faces="false" data-stream="false" data-header="false"></div>
 								</div>
 							</div>
 						</div>	
@@ -136,7 +141,7 @@
 									<a id="logout">Logout</a>
 									<div style="clear:both"></div>
 								</div>
-		<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="dark" data-show-faces="false" data-stream="false" data-header="false"></div>
+		
 		</div>
 		<a class="mixpanel" href="https://mixpanel.com/f/partner" target="_blank"><img src="https://mixpanel.com/site_media/images/partner/badge_blue.png" alt="Mobile and Web Analytics" /></a>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
