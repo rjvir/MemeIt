@@ -348,7 +348,7 @@ body {
 }
 
 .sharing-container {
-	margin-top:18px;
+	margin-top:10px;
 	margin-bottom:6px;
 }
 
@@ -579,8 +579,16 @@ body {
 
 .fb-like {
 	display:block;
+}
+
+.sharing-overlay .fb-like {
 	margin-top:20px;
 	margin-left:48px;
+}
+
+.sharing-container .fb-like {
+	margin-left:30px;
+	margin-bottom:8px;
 }
 
 .habla_window_div_base {
@@ -594,4 +602,23 @@ body {
 
 .fb-like {
 	display:inline-block;
+}
+
+#unlock {
+	border-radius:20px;
+	padding:4px 8px;
+	margin-bottom:1px;
+	font-weight:bold;
+	width:160px;
+}
+
+#unlock:hover {
+	cursor:pointer;
+}
+
+.premium-disclaimer {
+	margin-bottom:8px;
+	display:block;
+	color:#888;
+	font-size:10px;
 }

@@ -136,7 +136,7 @@ window.Meme = function(image, canvas, top, bottom, callback) {
 		if(fontSize > 60){
 			fontSize = 60
 		}
-		context.font = '800 ' + fontSize + 'px futura-pt-1';
+		context.font = '800 ' + fontSize + 'px futura-pt-1, impact';
 		context.textAlign = 'center';
 
 		// Draw them!

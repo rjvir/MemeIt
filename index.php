@@ -87,8 +87,10 @@
 										<div style="clear:both;"></div>
 									</div>
 									<div class="sharing-container">
+
+										<div class="fb-like-container"></div>
 										<a class="uibutton confirm fbshare" target="_blank">Share</a>										
-										<a class="uibutton confirm fbsend">Send to Friend</a>										
+										<a class="uibutton confirm fbsend">Send as Private Message</a>
 									</div>
 									<div style="clear:both;"></div>
 									<a id="rememe">Shuffle Caption</a>
@@ -101,7 +103,9 @@
 										</div>
 										<div style="clear:both;"></div>
 									</div>
-									<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="light" data-show-faces="false" data-stream="false" data-header="false"></div>
+									<a class="uibutton icon secure special" id="unlock">Unlock Premium Captions</a>
+									<span class="premium-disclaimer">(May not be safe for work)</span>
+									<!--<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="light" data-show-faces="false" data-stream="false" data-header="false"></div> -->
 								</div>
 							</div>
 						</div>	
@@ -117,7 +121,7 @@
 										<div class="sharing-inner">
 											<div class="animation-wrapper">
 												<a class="uibutton large confirm fbshare" id="fbshare"><div class="icon"></div>Share</a>
-												<a class="uibutton large confirm fbsend" id="fbsend"><div class="icon"></div>Send to Friend</a>
+												<a class="uibutton large confirm fbsend" id="fbsend"><div class="icon"></div>Send as Private Message</a>
 												<div class="fb-like-container"><div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div></div>
 												<div class="copy">
 													<input name="link" id="link" onclick="select()" readonly="readonly"/>

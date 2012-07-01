@@ -23,7 +23,7 @@ https://www.facebook.com/dialog/oauth?
 
 */
 
-$fb_url = 'https://www.facebook.com/dialog/oauth?client_id=132429983552387&redirect_uri=http://memeit.com/'.$uri.'&scope=read_stream,user_photos,friends_photos,user_likes,read_mailbox';
+$fb_url = 'https://www.facebook.com/dialog/oauth?client_id=132429983552387&redirect_uri=http://memeit.com/'.$uri.'&scope=publish_actions,read_stream,user_photos,friends_photos,user_likes,read_mailbox';
 
 $explodedByCode = explode('?code=', substr($_SERVER['REQUEST_URI'],1));
 

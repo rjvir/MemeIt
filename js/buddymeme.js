@@ -371,10 +371,7 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 					if(cont && count < 5){
 						count = count+1
 						self.getRecentFromFriends(u, max)
-					}
-					
-					console.log('got')
-					
+					}					
 				}
 	 			
 	 		}
@@ -401,7 +398,6 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 						image.set({'caption':data[i].caption, 'image':data[i].src_big, 'algorithm':algorithm, 'thumb':data[i].src})
 						self.add(image)
 					} */
-//					console.log(data)
 				}
 	  		}
 	  	)	 	
@@ -415,7 +411,6 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 	 	FB.api(uid+'/meme-it:view', function(response){
 	 		if(response.data.length > 0){
 				for(i=0;i<response.data.length;i++){
-		 			//console.log(response.data[i].data.meme)
 		 			var caption = response.data[i].data.meme.title;
 		 			var img = Buddymeme.utils.getImageUrlFromOg(response.data[i].data.meme.url)
 		 			var thumb = Buddymeme.utils.getThumbUrlFromOg(response.data[i].data.meme.url)
@@ -454,6 +449,26 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 		//create a meme object to be returned by the function, and return it
 		var meme = new Buddymeme.models.Meme({image: image.get('image'), caption: caption, algorithm: image.get('algorithm')})
 		return meme
+	 },
+	 returnAndDeleteRandomMeme: function(){
+		var self = this
+		
+		var length = this.length
+		var next = Math.floor(Math.random()*length)
+
+		var image = this.at(next)
+		this.remove(next)
+
+		var imagecaption = image.get('caption')
+		
+		if(image.get('viewCaption')){
+			var caption = image.get('viewCaption')
+		} else {
+			var caption = captions[Math.floor(Math.random()*captions.length)]
+		}
+		
+		var meme = new Buddymeme.models.Meme({image: image.get('image'), caption: caption, algorithm: image.get('algorithm')})
+		return meme
 	 }
 })
   
@@ -468,18 +483,22 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		"click #prev": 'back',
 		"click #logout": 'logout',
 		"click .fbshare": 'fbshare',
-		"click .fbsend": 'fbsend'
+		"click .fbsend": 'fbsend',
+		"click #unlock": 'shareSite'
 	},
 	initialize: function(){
 		$('.masher').show()
-		_.bindAll(this, 'render', 'setRelated', 'startSpinner', 'stopSpinner', 'preload', 'navigate', 'key_handler')
+		_.bindAll(this, 'render', 'setRelated', 'startSpinner', 'stopSpinner', 'preload', 'navigate', 'key_handler', 'unlockPremium')
 		$(document).bind('keydown', this.key_handler);
 		this.Images = new Buddymeme.models.Images
+		this.ogImages = new Buddymeme.models.Images
 		this.Router = new Buddymeme.routes.Router
 		this.Memes = new Buddymeme.models.Memes
 		this.User = new Buddymeme.models.User
 		this.User.getData()
-		self = this
+		this.doubleViewCounter = 0
+		this.loadCounter = 0
+		var self = this
 		this.Router.on('route:getMeme', function(image, caption){
 			//self.Images.unbind("add")
 			meme = new Buddymeme.models.Meme({
@@ -487,27 +506,45 @@ Buddymeme.views.Masher = Backbone.View.extend({
 				caption: decodeURIComponent(caption) || ''
 			})
 			
-			if(self.Memes.at(1)){
+/*			if(self.Memes.at(1)){
 				meme.set('algorithm', self.Memes.at(1).get('algorithm'))
+			} */
+
+			if(self.algorithm){
+				meme.set('algorithm', self.algorithm)
 			}
 			
-			next = self.Images.returnRandomMeme()
-			self.Memes = new Buddymeme.models.Memes([meme, next])
 			url = 'http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption'))
-			
-			if((typeof ogPost === 'undefined')){
-			} else {
-				clearTimeout(ogPost)			
-			}
-			ogPost = setTimeout(function(){
+			ogPost = function(){
 				FB.api('/me/meme-it:view&meme='+url,'post',  function(response) {
 					mixpanel.track('og view', {
 						'algorithm': meme.get('algorithm'),
 						'caption': meme.get('caption')			
 					})
+				})
+			}
+			
+			if((typeof ogTimeout === 'undefined')){
+			} else {
+				clearTimeout(ogTimeout)			
+			}
+			
+			if((this.loadCounter == 0) || (self.Memes.at(0) && (self.Memes.at(0).get('algorithm') == 'Get OG Views From Friends'))){
+				ogPost()
+			} else {
+				ogTimeout = setTimeout(ogPost,3000)
+			}
 
-				});
-			},2000);
+			if((self.doubleViewCounter < 20) && self.ogImages.length > 0){
+				next = self.ogImages.returnAndDeleteRandomMeme()
+				self.doubleViewCounter++
+			} else {
+				next = self.Images.returnRandomMeme()
+			}
+
+			self.Memes = new Buddymeme.models.Memes([meme, next])
+			
+			this.loadCounter++
 			self.render()
 		})
 			
@@ -539,19 +576,31 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 
 		setTimeout(function(){
- 			var caption = 'rawr';
+ 			var caption = 'rawr'
  			var img = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/551595_457986870896509_823218446_b.jpg'
  			var thumb = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/551595_457986870896509_823218446_s.jpg'
 			var image = new Buddymeme.models.Image()
 			image.set({'viewCaption':caption, 'image':img, 'algorithm':'nba meme', 'thumb':thumb})
 			self.Images.add(image)
-			console.log(image)
 			self.Images.getLikeFiltered()
 			self.Images.getRecent()
 			self.Images.getRecentFromMessageBuddies()
 			self.Images.getRecentFromRandom()
-			self.Images.getOgFromFriends()
+			self.ogImages.getOgFromFriends()
 		}, 1)
+
+		FB.api('me/og.likes', function(response){
+			if(response.data.length > 0) {
+				self.unlockPremium()
+			}
+		})
+
+		$('#unlock').mouseenter(function(){
+			unlockCopy = $('#unlock').html()
+			$('#unlock').html('Like Memeit.com');
+		}).mouseleave(function(){
+			$('#unlock').html(unlockCopy);		
+		})
 
 		this.startSpinner()
 	},
@@ -572,12 +621,13 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		//<div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>
 		
 		$('.fb-like-container').html('<div class="fb-like" data-href="http://memeit.com/' + Buddymeme.utils.serialize(meme.get('image')) + '/' + encodeURIComponent(meme.get('caption')) + '" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>')
-		FB.XFBML.parse();
+		FB.XFBML.parse()
 		//$('.fb-like-container').innerHTML = attr('data-href', 'http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption')))
 		mixpanel.track('load', {
 			'algorithm': meme.get('algorithm'),
 			'caption': meme.get('caption')			
 		})
+		console.log(this.Memes.at(0).get('algorithm'))
 		this.preload(this.Memes.at(1))
 		this.setRelated()
 		
@@ -598,9 +648,9 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		  zIndex: 2e9, // The z-index (defaults to 2000000000)
 		  top: 'auto', // Top position relative to parent in px
 		  left: 'auto' // Left position relative to parent in px
-		};
-		var target = document.getElementById('meme-container');
-		this.spinner = new Spinner(opts).spin(target);	
+		}
+		var target = document.getElementById('meme-container')
+		this.spinner = new Spinner(opts).spin(target)
 	},
 	stopSpinner: function(){
 		this.spinner.stop()
@@ -645,7 +695,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 			'algorithm': meme.get('algorithm'),
 			'caption': meme.get('caption')			
 		})
-		return false;
+		return false
 	},
 	reroute: function(){
 		var next = this.Memes.at(1)
@@ -654,6 +704,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	},
 	navigate: function(image){
 		this.Router.navigate('meme/' + Buddymeme.utils.serialize(image.get('image')) + ((image.get('caption'))?('/' + encodeURIComponent(image.get('caption'))):''), {trigger: true})
+		this.algorithm = image.get('algorithm')
 	},
 	setRelated: function(){
 		length = this.Images.length
@@ -773,6 +824,17 @@ Buddymeme.views.Masher = Backbone.View.extend({
 			'algorithm': meme.get('algorithm'),
 			'caption': meme.get('caption')			
 		})
+	},
+	shareSite: function(){
+		FB.api('/me/og.likes', {object: 'http://memeit.com'}, 'post', function(response){
+		})
+		mixpanel.track('unlock')
+		this.unlockPremium()
+	},
+	unlockPremium: function(){
+		$('#unlock').hide()
+		$('.premium-disclaimer').html('Premium Captions Unlocked!')
+		window.captions = window.premiumcaptions
 	}
 
 })
