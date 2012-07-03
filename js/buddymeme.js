@@ -443,7 +443,31 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 		} else {
 		
 		//otherwise, just get a random caption from the captions variable in captions.js
+		
+		/*//FRONT END CAPTION ALGORITHM
+		var global_counter = 0;			
+
+		var cap_alg = function() {
+			
+			global_counter = global_counter + 1;
+
+			var skipper = Math.random()*100;
+
+			var cap_number = Math.floor(Math.random()*captions.length);
+
+			var capper = ((cap_number/captions.length) * 8) + 1;
+				
+				if((capper * capper) > skipper && global_counter < 5) {
+						cap_alg();
+					}
+				else { global_counter = 0;  return cap_number; }
+		}
+			
+		var caption = captions[cap_alg()];*/
+			
+			
 			var caption = captions[Math.floor(Math.random()*captions.length)]
+			
 		}
 		
 		//create a meme object to be returned by the function, and return it
@@ -498,6 +522,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		this.User.getData()
 		this.doubleViewCounter = 0
 		this.loadCounter = 0
+		first = true;
 		var self = this
 		this.Router.on('route:getMeme', function(image, caption){
 			//self.Images.unbind("add")
@@ -544,6 +569,11 @@ Buddymeme.views.Masher = Backbone.View.extend({
 
 			self.Memes = new Buddymeme.models.Memes([meme, next])
 			
+			if(first == true){
+				mixpanel.track('first caption', {'caption':decodeURIComponent(caption)})
+				first = false;
+			}
+						
 			this.loadCounter++
 			self.render()
 		})
@@ -565,7 +595,8 @@ Buddymeme.views.Masher = Backbone.View.extend({
 //					var next = self.Images.returnRandomMeme()
 				} else {
 					var next = self.Images.returnRandomMeme()
-					self.navigate(next)				
+					self.navigate(next)
+					first = false			
 				}
 				$('.sharing-overlay').show()
 			}
@@ -576,9 +607,9 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 
 		setTimeout(function(){
- 			var caption = 'rawr'
- 			var img = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/551595_457986870896509_823218446_b.jpg'
- 			var thumb = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/551595_457986870896509_823218446_s.jpg'
+ 			var caption = 'Genius. Billionaire. Playboy. Philanthropist.'
+ 			var img = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/428953_3625731639306_616515114_b.jpg'
+ 			var thumb = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/428953_3625731639306_616515114_s.jpg'
 			var image = new Buddymeme.models.Image()
 			image.set({'viewCaption':caption, 'image':img, 'algorithm':'nba meme', 'thumb':thumb})
 			self.Images.add(image)
@@ -833,8 +864,8 @@ Buddymeme.views.Masher = Backbone.View.extend({
 	},
 	unlockPremium: function(){
 		$('#unlock').hide()
-		$('.premium-disclaimer').html('Premium Captions Unlocked!')
-		window.captions = window.premiumcaptions
+		$('.premium-disclaimer').html('Dirty Captions Enabled!')
+		//window.captions = window.premiumcaptions
 	}
 
 })

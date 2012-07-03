@@ -604,6 +604,14 @@ body {
 	display:inline-block;
 }
 
+.premium-container {
+	position:absolute;
+	top:10px;
+	width:100%;
+	text-align:center;
+	z-index:-1;
+}
+
 #unlock {
 	border-radius:20px;
 	padding:4px 8px;

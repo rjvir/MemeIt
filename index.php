@@ -103,12 +103,14 @@
 										</div>
 										<div style="clear:both;"></div>
 									</div>
-									<a class="uibutton icon secure special" id="unlock">Unlock Premium Captions</a>
-									<span class="premium-disclaimer">(May not be safe for work)</span>
 									<!--<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="light" data-show-faces="false" data-stream="false" data-header="false"></div> -->
 								</div>
 							</div>
 						</div>	
+						<div class="premium-container">
+							<a class="uibutton icon secure special" id="unlock">Enable Dirty Captions</a>
+							<span class="premium-disclaimer"></span>
+						</div>
 					</div>
 					<div class="main-container">
 						<div class="main">
