@@ -1,5 +1,5 @@
 <?php
-    
+echo date('l jS \of F Y h:i:s A');
 	
 include('library_mixpanel.php');
 
@@ -46,15 +46,54 @@ $data = $mp->request($endpoint,$parameters);
 //foreach($data->data->values as $piece){ print_r($piece); echo '<br /><br /><br />'; }
 
 $results = $data->data->values;
-$json = '';
+$shifts = '';
 
 foreach ($results as $caption=>$object) { 
 	foreach ($object as $date=>$count){
-		$json[$caption] = $count;
+		$shifts[] = array($caption, $count);
 	}
 }
 
-echo 'window.weightedcaptions = '.json_encode($json);
+//echo 'window.weightedcaptions = '.json_encode($json);
+
+$captions = json_decode(str_replace('window.captions = ', '', file_get_contents('js/captions.js')));
+
+print_r($shifts);
+print_r($captions);
+
+for($i = 0; $i < count($shifts); $i++){
+	$cap = $shifts[$i][0];
+	$count = $shifts[$i][1];
+	
+	for($x = 0; $x < $count; $x ++){
+		for($j=1; $j < count($captions); $j++){
+			if($captions[$j] == $cap){
+				$temp = $captions[$j-1];
+				$captions[$j - 1] = $cap;
+				$captions[$j] = $temp;
+			}
+		}
+	}
+
+}
+
+print_r($captions);
+
+$json = 'window.captions = '.json_encode($captions);
+file_put_contents('js/captions.js',$json);
+
+/*for(i = 0; i < firstcaptions.length; i++){
+	for(j = 1; j < captionlist.length; j++){
+		if(firstcaptions[i] === captionlist[j]){
+			for(k = 0; k < firstcaptions[i]->value; k++){
+				var temp = captionlist[i-1]
+				captionlist[i-1] = captionlist[i];
+				captionlist[i] = temp;
+			}
+		}
+	}
+}*/
+
 
 //Token = 'c0d8bd417fae5251175bf6da64ba694f';
 	
