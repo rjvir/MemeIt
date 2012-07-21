@@ -1,4 +1,6 @@
 <?php
+//if ($_SERVER['REMOTE_ADDR'] != '173.230.145.39') exit('No direct script access allowed');
+
 echo date('l jS \of F Y h:i:s A');
 	
 include('library_mixpanel.php');
@@ -28,8 +30,8 @@ $endpoint = array('segmentation');
 //Create array of properties to send
 $parameters = array(
 'event' => 'first caption',
-'from_date' => '2012-07-02', 
-'to_date' => '2012-07-02',
+'from_date' => date("Y-m-d"), 
+'to_date' => date("Y-m-d"),
 'on' => 'properties["caption"]'
 );
 
@@ -80,8 +82,9 @@ for($i = 0; $i < count($shifts); $i++){
 print_r($captions);
 
 $json = 'window.captions = '.json_encode($captions);
-file_put_contents('js/captions.js',$json);
-
+if($json) {
+	file_put_contents('js/captions.js',$json);
+}
 /*for(i = 0; i < firstcaptions.length; i++){
 	for(j = 1; j < captionlist.length; j++){
 		if(firstcaptions[i] === captionlist[j]){

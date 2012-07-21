@@ -444,29 +444,22 @@ Buddymeme.models.Images = Backbone.Collection.extend({
 		
 		//otherwise, just get a random caption from the captions variable in captions.js
 		
-		/*//FRONT END CAPTION ALGORITHM
-		var global_counter = 0;			
-
-		var cap_alg = function() {
+		//FRONT END CAPTION ALGORITHM
+			var cap_alg = function() {
+				var skipper = Math.random()*100;
+				var cap_number = Math.floor(Math.random()*captions.length);
+				var capper = ((cap_number/captions.length) * 8) + 1;
+				if((cap_number * cap_number) > skipper) {
+					cap_alg();
+				}
+				return cap_number;
+			}
 			
-			global_counter = global_counter + 1;
-
-			var skipper = Math.random()*100;
-
-			var cap_number = Math.floor(Math.random()*captions.length);
-
-			var capper = ((cap_number/captions.length) * 8) + 1;
-				
-				if((capper * capper) > skipper && global_counter < 5) {
-						cap_alg();
-					}
-				else { global_counter = 0;  return cap_number; }
-		}
-			
-		var caption = captions[cap_alg()];*/
+			var caption = captions[cap_alg()];
+			/**/
 			
 			
-			var caption = captions[Math.floor(Math.random()*captions.length)]
+			//var caption = captions[Math.floor(Math.random()*captions.length)]
 			
 		}
 		
@@ -654,7 +647,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		$('.fb-like-container').html('<div class="fb-like" data-href="http://memeit.com/' + Buddymeme.utils.serialize(meme.get('image')) + '/' + encodeURIComponent(meme.get('caption')) + '" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>')
 		FB.XFBML.parse()
 		//$('.fb-like-container').innerHTML = attr('data-href', 'http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption')))
-		mixpanel.track('load', {
+		mixpanel.track('newload', {
 			'algorithm': meme.get('algorithm'),
 			'caption': meme.get('caption')			
 		})
@@ -892,7 +885,7 @@ Buddymeme.views.Auth = Backbone.View.extend({
 				alert('you must authorize in order to use Meme It');
 				console.log('User cancelled login or did not fully authorize.');
 			}
-		}, {scope: 'publish_actions,read_stream,user_photos,friends_photos,user_likes,read_mailbox'})
+		}, {scope: 'publish_actions,read_stream,user_photos,friends_photos,user_likes,read_mailbox,xmpp_login'})
 		mixpanel.track('clicked auth')
 	},
 	renderAuth: function(){
