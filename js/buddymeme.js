@@ -12,11 +12,11 @@ Buddymeme.utils.serialize = function(fbUrl){
 }
 
 Buddymeme.utils.unserialize = function(oid){
-	return 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/' + oid + '_b.jpg'
+	return 'https://sphotos-b.xx.fbcdn.net/hphotos-ash3/' + oid + '_b.jpg'
 }
 
 Buddymeme.utils.unserializeThumb = function(oid){
-	return 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/' + oid + '_s.jpg'
+	return 'https://sphotos-b.xx.fbcdn.net/hphotos-ash3/' + oid + '_s.jpg'
 }
 
 Buddymeme.utils.reserialize = function(fbUrl){
