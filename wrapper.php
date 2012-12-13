@@ -37,8 +37,8 @@ if(!$explodedByCode[1] && ($_SERVER['HTTP_USER_AGENT'] != "facebookexternalhit/1
   <meta property="fb:app_id" content="132429983552387" /> 
   <meta property="og:type"   content="meme-it:meme" />
 <!--  <meta property="og:url"    content="http://memeit.com/<?=$uri?>" />-->
-  <meta property="og:image"  content="http://memeit.com/proxy.php?url=https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/<?=$exploded[0]?>_b.jpg" />
-  <meta property="og:description" content="One of world's most trending memes. You must be 18 or older to view this meme." />
+  <meta property="og:image"  content="http://memeit.com/proxy.php?url=https://sphotos-b.xx.fbcdn.net/hphotos-ash3/<?=$exploded[0]?>_b.jpg" />
+  <meta property="og:description" content="Check out this hilarious meme I found on Meme It!" />
   <meta property="og:title"  content="<?=urldecode($exploded[1])?>" />
   <meta http-equiv="REFRESH" content="0;url=http://memeit.com/#meme/<?=$explodedByCode[0]?>" />
 </head>

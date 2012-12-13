@@ -67,8 +67,6 @@
 						<div style="display:none">Meme your friends!</div>
 						<div class="pitch">View hilarious memes of your friends through their Facebook pictures.</div>
 						<button id="auth">Login with Facebook</button>
-						<div class="fb-like-box" data-href="https://www.facebook.com/pages/Meme-It/492890397393134" data-width="220" data-colorscheme="dark" data-show-faces="false" data-stream="false" data-header="false" style="margin-top:10px"></div>
-
 					</div>
 				</div>
 			</div>
@@ -88,7 +86,6 @@
 									</div>
 									<div class="sharing-container">
 
-										<div class="fb-like-container"></div>
 										<a class="uibutton confirm fbshare" target="_blank">Share</a>										
 										<a class="uibutton confirm fbsend">Send as Private Message</a>
 									</div>

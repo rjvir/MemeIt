@@ -600,17 +600,17 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		})
 
 		setTimeout(function(){
- 			var caption = 'Genius. Billionaire. Playboy. Philanthropist.'
- 			var img = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/428953_3625731639306_616515114_b.jpg'
- 			var thumb = 'https://fbcdn_sphotos_a-a.akamaihd.net/hphotos-ak-ash3/428953_3625731639306_616515114_s.jpg'
+/* 			var caption = 'Genius. Billionaire. Playboy. Philanthropist.'
+ 			var img = 'https://sphotos-b.xx.fbcdn.net/hphotos-ash3/428953_3625731639306_616515114_b.jpg'
+ 			var thumb = 'https://sphotos-b.xx.fbcdn.net/hphotos-ash3/428953_3625731639306_616515114_s.jpg'
 			var image = new Buddymeme.models.Image()
 			image.set({'viewCaption':caption, 'image':img, 'algorithm':'nba meme', 'thumb':thumb})
-			self.Images.add(image)
+			self.Images.add(image) */
 			self.Images.getLikeFiltered()
 			self.Images.getRecent()
 			self.Images.getRecentFromMessageBuddies()
 			self.Images.getRecentFromRandom()
-			self.ogImages.getOgFromFriends()
+//			self.ogImages.getOgFromFriends()
 		}, 1)
 
 		FB.api('me/og.likes', function(response){
@@ -644,7 +644,7 @@ Buddymeme.views.Masher = Backbone.View.extend({
 		//create facebook like button
 		//<div class="fb-like" data-href="" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>
 		
-		$('.fb-like-container').html('<div class="fb-like" data-href="http://memeit.com/' + Buddymeme.utils.serialize(meme.get('image')) + '/' + encodeURIComponent(meme.get('caption')) + '" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>')
+		//$('.fb-like-container').html('<div class="fb-like" data-href="http://memeit.com/' + Buddymeme.utils.serialize(meme.get('image')) + '/' + encodeURIComponent(meme.get('caption')) + '" data-send="false" data-layout="button_count" data-width="1" data-show-faces="true" data-font="arial"></div>')
 		FB.XFBML.parse()
 		//$('.fb-like-container').innerHTML = attr('data-href', 'http://memeit.com/'+Buddymeme.utils.serialize(meme.get('image'))+'/'+encodeURIComponent(meme.get('caption')))
 		mixpanel.track('newload', {
@@ -885,7 +885,7 @@ Buddymeme.views.Auth = Backbone.View.extend({
 				alert('you must authorize in order to use Meme It');
 				console.log('User cancelled login or did not fully authorize.');
 			}
-		}, {scope: 'publish_actions,read_stream,user_photos,friends_photos,user_likes,read_mailbox,xmpp_login'})
+		}, {scope: 'publish_actions,read_stream,user_photos,friends_photos,user_likes,read_mailbox'})
 		mixpanel.track('clicked auth')
 	},
 	renderAuth: function(){
